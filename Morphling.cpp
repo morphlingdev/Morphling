@@ -2,20 +2,23 @@
 
 int main(int argc, char *argv[])
 {
-    // Initialize SDL's subsystems... This code will eventually be moved to display
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
-    {
-        fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());
-        exit(1);
-    }
+    // seed random with processor ticks, pseudorandom enough
+    srand(SDL_GetTicks());
 
-    //SDL_WM_SetIcon(SDL_LoadBMP(LOCATION OF THE ICON BITMAP), NULL);
-    SDL_WM_SetCaption("Morphling","Morphling");
 
+    Display dsp(TOTALWIDTH, TOTALHEIGHT);
 
     // seed random with processor ticks, pseudorandom enough
     srand(SDL_GetTicks());
 
+    // draw red pixel for the lulz
+    dsp.putpixel(100, 100, 255, 0, 0);
+    dsp.update();
+
+    // draw a bunch of tiles for further lulz
+    dsp.draw_tile(0, 0, Display::TILE_LAVA);
+    dsp.draw_tile(24, 0, Display::TILE_GRASS);
+    dsp.update();
 
     // Poll for events, and handle the ones we care about.
     SDL_Event event;
