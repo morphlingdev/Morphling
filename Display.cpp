@@ -16,6 +16,20 @@ void Display::update()
     return;
 }
 
+/* Draw tile such that its upper-left pixel is at (x, y) */
+void Display::draw_tile(int x, int y, TileID id)
+{
+    SDL_Rect srcrect, dstrect;
+    dstrect.x = x;
+    dstrect.y = y;
+    srcrect.x = (id%10)*24;
+    srcrect.y = id/10;
+    srcrect.w = 24;
+    srcrect.h = 24;
+    SDL_BlitSurface(tilesheet, &srcrect, gScreen, &dstrect);
+    return;
+}
+
 /* Initialize graphics */
 Display::Display(int width, int height)
 {
@@ -54,9 +68,6 @@ Display::Display(int width, int height)
         /* Do first mode */
         gScreen = SDL_SetVideoMode(width,height, 32, SDL_SWSURFACE);
     }
-
-
-    // currently is #defined width and height, a simple change (see below) and a fullscreen toggle will allow the screen to be custom sized. may cause bugs, until ready use #defs.
     //gScreen = SDL_SetVideoMode(0, 0, 32, SDL_SWSURFACE);
 
     // If we fail, return error.
@@ -69,4 +80,7 @@ Display::Display(int width, int height)
     // clear screen just in case
     SDL_FillRect(gScreen,NULL,0x000000);
     gScreen = SDL_SetVideoMode(width, height, 32, SDL_SWSURFACE);
+    
+    // load tiles.png
+    tilesheet = IMG_Load("tiles.png");
 }

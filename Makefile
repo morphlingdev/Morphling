@@ -2,7 +2,7 @@
 CC=g++
 
 CFLAGS=-c -lSDL -lSDL_ttf
-LDFLAGS=-lSDL -lSDL_ttf
+LDFLAGS=-lSDL -lSDL_ttf -lSDL_image
 SOURCES=Morphling.cpp Display.cpp Ability.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Morphling
