@@ -1,0 +1,13 @@
+Currently we have:
+-Basic Display
+-Basic Ability
+
+We need:
+-Full Display (blit, grid map system, text system)
+-Full Ability (consuming, experience)
+-Full Creature (stats, abilities, xy location)
+-Full Map (grid, creature pointer)
+-Full User Interface (input)
+
+Changelog:
+V1 Added Base Ideas

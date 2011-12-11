@@ -16,19 +16,19 @@ const int COST_GOLD = 3;
 class Ability
 {
 private:
-std::string name;
-std::string desc;
-int target_type;
-int range;
-int aoe_size;
-int channel_time;
-int cooldown;
-int passive[];
-int costs[];
+    std::string name;
+    std::string desc;
+    int target_type;
+    int range;
+    int aoe_size;
+    int channel_time;
+    int cooldown;
+    int passive[];
+    int costs[];
 
 public:
 
-Ability(std::string);
+    Ability(std::string);
 };
 
 #endif
