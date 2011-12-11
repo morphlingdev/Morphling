@@ -1,4 +1,4 @@
-#include "display.h"
+#include "Display.h"
 
 /* Changes a single pixel located at (x, y) to RGB values (r, g, b) */
 void Display::putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b){

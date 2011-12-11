@@ -1,7 +1,14 @@
-#ifdef _WIN32
+/*#ifdef _WIN32
 #include <SDL.h>
 #else
 #include <SDL/SDL.h>
+#endif*/
+#if defined(_MSC_VER)
+#include "SDL.h"
+//#include "SDL_ttf.h"
+#else
+#include "SDL/SDL.h"
+//#include "SDL/SDL_ttf.h"
 #endif
 
 class Display{
