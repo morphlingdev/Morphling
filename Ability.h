@@ -1,7 +1,7 @@
-#include <string>
-
 #ifndef ABILITY_H
 #define ABILITY_H
+
+#include <string>
 
 //Constants
 const int TARGET_LINE = 1;
