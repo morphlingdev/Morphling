@@ -5,20 +5,32 @@ int main(int argc, char *argv[])
     // seed random with processor ticks, pseudorandom enough
     srand(SDL_GetTicks());
 
-
     Display dsp(TOTALWIDTH, TOTALHEIGHT);
+	
+	// create map ...
+	Map M(20, 20);
+	// ... and randomize its tiles
+	for(int i=0;i<20;i++){
+		for(int j=0;j<20;j++){
+			M.tileAt(i, j)->setAppearance(std::rand() % 2);
+		}
+	}
 
     // seed random with processor ticks, pseudorandom enough
     srand(SDL_GetTicks());
 
     // draw red pixel for the lulz
     dsp.putpixel(100, 100, 255, 0, 0);
-    dsp.update();
 
     // draw a bunch of tiles for further lulz
-    dsp.draw_tile(0, 0, Display::TILE_LAVA);
-    dsp.draw_tile(24, 0, Display::TILE_GRASS);
+	// TODO: Make these use enum values instead of hardcoded integers
+    dsp.draw_tile(0, 0, 1);
+    dsp.draw_tile(24, 0, 1);
     dsp.update();
+	
+	// draw a map for ULTIMATE lulz
+	dsp.draw_map(101, 101, &M);
+	dsp.update();
 
     // Poll for events, and handle the ones we care about.
     SDL_Event event;

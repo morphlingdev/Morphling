@@ -1,6 +1,8 @@
 #ifndef MORPHLING_H
 #define MORPHLING_H
 
+#include <cstdlib>
+
 #if defined(_MSC_VER)
 #include "SDL.h"
 #include "SDL_ttf.h"

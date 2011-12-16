@@ -9,6 +9,9 @@ private:
 	Tile **t;
 	int width, height;
 public:
+	Tile* tileAt(int x, int y);
+	int getWidth(){ return width; }
+	int getHeight(){ return height; }
 	Map(int w, int h);
 	~Map();
 };

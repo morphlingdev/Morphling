@@ -1,18 +1,15 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "Display.h"
-
 class Tile
 {
-  Display::TileImgId appearance;
+	int appearance;
 public:
-  Tile(){
-		this->appearance = Display::TILE_LAVA;
-  }
-  Tile(Display::TileImgId appearance){
+	int getAppearance(){ return appearance; }
+	int setAppearance(int appearance){ this->appearance = appearance; }
+	Tile(int appearance=0){
 		this->appearance = appearance;
-  }
+	}
 };
 
 #endif

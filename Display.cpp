@@ -9,7 +9,7 @@ void Display::putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b)
     return;
 }
 
-/* Updates graphical changes */
+/* Make graphical changes visible */
 void Display::update()
 {
     SDL_Flip(gScreen);
@@ -17,7 +17,7 @@ void Display::update()
 }
 
 /* Draw tile such that its upper-left pixel is at (x, y) */
-void Display::draw_tile(int x, int y, TileID id)
+void Display::draw_tile(int x, int y, int id)
 {
     SDL_Rect srcrect, dstrect;
     dstrect.x = x;
@@ -28,6 +28,16 @@ void Display::draw_tile(int x, int y, TileID id)
     srcrect.h = 24;
     SDL_BlitSurface(tilesheet, &srcrect, gScreen, &dstrect);
     return;
+}
+
+void Display::draw_map(int x, int y, Map *m)
+{
+	for(int i=0;i<m->getWidth();i++){
+		for(int j=0;j<m->getHeight();j++){
+			draw_tile(i*24+x, j*24+y, m->tileAt(i, j)->getAppearance());
+		}
+	}
+	return;
 }
 
 /* Initialize graphics */
