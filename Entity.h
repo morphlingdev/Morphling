@@ -18,7 +18,7 @@ protected:
 	int amr;   //
 	std::list<Ability> a; // Entity's abilities
 public:
-	Entity();                      // Constructor
+	Entity(); // Constructor
 	std::string& name();           //
 	std::string& type();           //
 	int& maxHitpoints();           //
@@ -32,12 +32,12 @@ public:
 
 class Player : public Entity
 {
-	std::list<Items> i; // Inventory
-	int gp;             // Gold pieces
+	std::list<Item> i; // Inventory
+	int gp; // Gold pieces
 public:
-	Player();                  // Constructor
-	std::list<Items>& items(); // References to
-	int& gold();               // private members
+	Player(); // Constructor
+	std::list<Item>& items(); // References to
+	int& gold();              // private members
 };
 
 #endif
