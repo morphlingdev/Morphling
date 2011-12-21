@@ -22,15 +22,15 @@ protected:
 public:
 	Entity(); // Constructor
 	virtual ~Entity(); // Destructor
-	std::string& name();           //
-	std::string& type();           //
-	int& maxHitpoints();           //
-	int& hitpoints();              //
-	int& maxMana();                // References to
-	int& mana();                   // protected members
-	int& strength();               //
-	int& armor();                  //
-	std::list<Ability>& abilities();//
+	std::string& name();             //
+	std::string& type();             //
+	int& maxHitpoints();             //
+	int& hitpoints();                //
+	int& maxMana();                  // References to
+	int& mana();                     // protected members
+	int& strength();                 //
+	int& armor();                    //
+	std::list<Ability>& abilities(); //
 };
 
 class Player : public Entity
@@ -41,6 +41,7 @@ public:
 	Player(); // Constructor
 	//std::list<Item>& items(); // References to
 	int& gold();              // private members
+	void death(); // Goto here when player dies
 };
 
 #endif
