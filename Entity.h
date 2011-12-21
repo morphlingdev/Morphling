@@ -5,6 +5,8 @@
 #include <string>
 #include <list>
 
+#include "Ability.h"
+
 class Entity
 {
 protected:
@@ -27,16 +29,16 @@ public:
 	int& mana();                   // protected members
 	int& strength();               //
 	int& armor();                  //
-	std::list<Ability>& abilities; //
+	std::list<Ability>& abilities();//
 };
 
 class Player : public Entity
 {
-	std::list<Item> i; // Inventory
+	//std::list<Item> i; // Inventory
 	int gp; // Gold pieces
 public:
 	Player(); // Constructor
-	std::list<Item>& items(); // References to
+	//std::list<Item>& items(); // References to
 	int& gold();              // private members
 };
 
