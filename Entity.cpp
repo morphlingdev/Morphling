@@ -15,6 +15,11 @@ Player::Player() // Constructor specifically for player
 
 }
 
+void Player::death() // Goto here when player dies
+{
+  
+}
+
 std::string& Entity::name() {return n;}             //
 std::string& Entity::type() {return t;}             //
 int& Entity::maxHitpoints() {return maxhp;}         //
