@@ -1,4 +1,5 @@
 #include "Map.h"
+#include <cstdlib>
 
 Tile* Map::tileAt(int x, int y){
 	return &(t[x][y]);
@@ -10,16 +11,29 @@ Map::Map(int w, int h){
 	for(int i=0;i<w;i++) t[i] = new Tile[h];
 
 	//Initialize Perlin Noise
-	p = Perlin(5, 0.5, 0.1, 1234);
-	//5 octaves, 0.5 persistance (roughness, high is more rough), 0.1 zoom (1.0 is "each tile completely random"), 1234 seed (should be random)
+	p = Perlin(5, 0.5, 0.1, std::rand());
+	//5 octaves, 0.5 persistance (roughness, high is more rough), 0.1 zoom (1.0 is "each tile completely random"), random seed
 
 	for(int i = 0; i < w; i++)
 	{
         for(int j = 0;j < h; j++)
         {
-            if(p.n(i, j) > 0.0) //Temporary placeholder... eventually it will do something more impressive
+            //Temporary placeholder... eventually it will do something more impressive
+            if(p.n(i, j) > 0.7)
             {
-                t[i][j].setAppearance(1);
+                t[i][j].setAppearance(4); // mountain
+            }
+            else if(p.n(i, j) > 0.1)
+            {
+                t[i][j].setAppearance(0); // grass
+            }
+            else if(p.n(i, j) > -0.2)
+            {
+                t[i][j].setAppearance(3); // sand
+            }
+            else
+            {
+                t[i][j].setAppearance(2); // water
             }
         }
 	}

@@ -20,7 +20,7 @@ class Display
 public:
     enum TileImgId
     {
-        TILE_GRASS, TILE_LAVA
+        TILE_GRASS, TILE_LAVA, TILE_WATER, TILE_SAND, TILE_MOUNTAIN
     };
 
     //initializer, destructor
