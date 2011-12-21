@@ -8,6 +8,7 @@ class Map
 private:
 	Tile **t;
 	int width, height;
+	Perlin p;
 public:
 	Tile* tileAt(int x, int y);
 	int getWidth(){ return width; }
