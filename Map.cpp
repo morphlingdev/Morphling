@@ -10,8 +10,8 @@ Map::Map(int w, int h){
 	for(int i=0;i<w;i++) t[i] = new Tile[h];
 
 	//Initialize Perlin Noise
-	p = Perlin(5, 0.5, 0.01, 1234);
-	//5 octaves, 0.5 persistance (roughness, high is more rough), 0.01 zoom (1.0 is "each tile completely random"), 1234 seed (should be random)
+	p = Perlin(5, 0.5, 0.1, 1234);
+	//5 octaves, 0.5 persistance (roughness, high is more rough), 0.1 zoom (1.0 is "each tile completely random"), 1234 seed (should be random)
 
 	for(int i = 0; i < w; i++)
 	{
