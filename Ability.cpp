@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstdlib>
 
 using namespace std;
 
@@ -68,7 +69,7 @@ Ability::Ability(string filename)
                     //TYPE_LINE is default, so we only need to check for "smite"
                     if(vals.compare("smite") == 0)
                     {
-                        target_type = TYPE_SMITE;
+                        target_type = TARGET_SMITE;
                     }
                 }
                 else if(command.compare("range") == 0)
@@ -77,7 +78,7 @@ Ability::Ability(string filename)
                 }
                 else if(command.compare("channel") == 0)
                 {
-                    channel = atoi(vals.c_str());
+                    channel_time = atoi(vals.c_str());
                 }
                 else if(command.compare("aoe") == 0)
                 {
@@ -95,23 +96,23 @@ Ability::Ability(string filename)
                 {
                     colon = vals.find(":");
                     string s_ccost = vals.substr(0, colon);
-                    string s_camt = vals.substr(colon + 1, vals.length());
+                    string s_pbonus = vals.substr(colon + 1, vals.length());
                     int ccost;
-                    if(s_pstat.compare("mana") == 0)
+                    if(s_ccost.compare("mana") == 0)
                     {
                         ccost = COST_MANA;
                     }
-                    else if(s_pstat.compare("health") == 0)
+                    else if(s_ccost.compare("health") == 0)
                     {
                         ccost = COST_HEALTH;
                     }
-                    else if(s_pstat.compare("gold") == 0)
+                    else if(s_ccost.compare("gold") == 0)
                     {
                         ccost = COST_GOLD;
                     }
                     int cbonus = atoi(s_pbonus.c_str());
 
-                    cost[ccost] += cbonus;
+                    costs[ccost] += cbonus;
                 }
 
 

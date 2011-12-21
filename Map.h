@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include "Tile.h"
+#include "Perlin.h"
 
 class Map
 {

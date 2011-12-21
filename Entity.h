@@ -21,7 +21,7 @@ protected:
 	std::list<Ability> a; // Entity's abilities
 public:
 	Entity(); // Constructor
-	virtual ~Entity(); // Destructor
+	~Entity(); // Destructor
 	std::string& name();             //
 	std::string& type();             //
 	int& maxHitpoints();             //

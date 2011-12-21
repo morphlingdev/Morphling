@@ -7,15 +7,9 @@ int main(int argc, char *argv[])
 
     Display dsp(TOTALWIDTH, TOTALHEIGHT);
 	
-	// create map ...
-	Map M(20, 20);
-	// ... and randomize its tiles
-	for(int i=0;i<20;i++){
-		for(int j=0;j<20;j++){
-			M.tileAt(i, j)->setAppearance(std::rand() % 2);
-		}
-	}
-
+	// create map with perlin noise (in the map initializer)
+    Map M(20, 20);
+	
     // seed random with processor ticks, pseudorandom enough
     srand(SDL_GetTicks());
 
@@ -29,8 +23,8 @@ int main(int argc, char *argv[])
     dsp.update();
 	
 	// draw a map for ULTIMATE lulz
-	dsp.draw_map(101, 101, &M);
-	dsp.update();
+    dsp.draw_map(101, 101, &M);
+    dsp.update();
 
     // Poll for events, and handle the ones we care about.
     SDL_Event event;

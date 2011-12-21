@@ -5,11 +5,6 @@ Entity::Entity() // Constructor for any entity
 
 }
 
-virtual Entity::~Entity() // Destructor for any entity
-{
-  
-}
-
 Player::Player() // Constructor specifically for player
 {
 
