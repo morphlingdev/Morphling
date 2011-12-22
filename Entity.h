@@ -18,6 +18,7 @@ protected:
 	int m;     // of the entity
 	int str;   //
 	int amr;   //
+	int lvl;
 	std::list<Ability> a; // Entity's abilities
 public:
 	Entity(); // Constructor
@@ -30,18 +31,23 @@ public:
 	int& mana();                     // protected members
 	int& strength();                 //
 	int& armor();                    //
+	int& level();                    //
 	std::list<Ability>& abilities(); //
 };
 
 class Player : public Entity
 {
 	//std::list<Item> i; // Inventory
-	int gp; // Gold pieces
+	int gp; // Gold pieces 
+	// Need to implement level-up system etc.
+	int xp; // Experience
 public:
 	Player(); // Constructor
 	//std::list<Item>& items(); // References to
 	int& gold();              // private members
+	int& experience();        //
 	void death(); // Goto here when player dies
+	void level_up(); // Goto here when player levels up
 };
 
 #endif
