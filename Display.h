@@ -23,10 +23,12 @@ public:
         TILE_GRASS, TILE_LAVA, TILE_WATER, TILE_SAND, TILE_MOUNTAIN
     };
 
-    //initializer, destructor
+    // initializer, destructor
+    Display(){};
     Display(int width, int height);
 
     // methods
+    void setup(int width, int height);
     void putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
     void draw_tile(int x, int y, int id);
     void draw_map(int x, int y, Map *m);

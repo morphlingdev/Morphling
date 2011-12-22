@@ -1,30 +1,50 @@
 #include "Morphling.h"
 
+void Game::init()
+{
+    dsp.setup(1024, 768);
+	// create 20x20 map
+    M.setup(20, 20);
+    
+    // initialize it with a delicious generated map
+    M.generate_perlin();
+	
+	// draw a map for ULTIMATE lulz
+    dsp.draw_map(0, 0, &M);
+    
+    // update the stuff shown on screen
+    dsp.update();
+}
+
+int Game::handle_event(SDL_Event &event){
+    switch (event.type)
+    {
+      case SDL_QUIT:
+        return 1;
+      case SDL_KEYDOWN:
+        switch (event.key.keysym.sym)
+        {
+          case SDLK_SPACE:
+            M.setup(30, 30);
+            M.generate_perlin();
+            dsp.draw_map(0, 0, &M);
+            dsp.update();
+            break;
+        }
+        break;
+      default:
+        return 0;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     // seed random with processor ticks, pseudorandom enough
     srand(SDL_GetTicks());
-
-    Display dsp(TOTALWIDTH, TOTALHEIGHT);
-	
-	// create map with perlin noise (in the map initializer)
-    Map M(20, 20);
-	
-    // seed random with processor ticks, pseudorandom enough
-    srand(SDL_GetTicks());
-
-    // draw red pixel for the lulz
-    dsp.putpixel(100, 100, 255, 0, 0);
-
-    // draw a bunch of tiles for further lulz
-	// TODO: Make these use enum values instead of hardcoded integers
-    dsp.draw_tile(0, 0, 1);
-    dsp.draw_tile(24, 0, 1);
-    dsp.update();
-	
-	// draw a map for ULTIMATE lulz
-    dsp.draw_map(101, 101, &M);
-    dsp.update();
+    
+    // Initialize game engine
+    Game G;
+    G.init();
 
     // Poll for events, and handle the ones we care about.
     SDL_Event event;
@@ -33,13 +53,8 @@ int main(int argc, char *argv[])
     {
         while (SDL_PollEvent(&event))
         {
-            switch (event.type)
-            {
-            case SDL_QUIT:
-                loop = false;
-            default:
-                continue;
-            }
+            int status = G.handle_event(event);
+            if(status == 1) loop = false;
         }
         SDL_Delay(1000/30);
     }

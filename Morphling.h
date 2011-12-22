@@ -19,4 +19,18 @@
 #define TOTALWIDTH 1024
 #define TOTALHEIGHT 768
 
+class Game{
+private:
+    Display dsp;
+    Map M;
+public:
+    // constructor and destructor
+    Game(){};
+    ~Game(){};
+    
+    // functions
+    void init();
+    int handle_event(SDL_Event &evt);
+};
+
 #endif

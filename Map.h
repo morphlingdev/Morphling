@@ -14,7 +14,12 @@ public:
 	Tile* tileAt(int x, int y);
 	int getWidth(){ return width; }
 	int getHeight(){ return height; }
+	
+	void setup(int w, int h);
+	void generate_perlin();
+	
 	Map(int w, int h);
+	Map();
 	~Map();
 };
 

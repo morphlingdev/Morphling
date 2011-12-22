@@ -41,7 +41,7 @@ void Display::draw_map(int x, int y, Map *m)
 }
 
 /* Initialize graphics */
-Display::Display(int width, int height)
+void Display::setup(int width, int height)
 {
     // Initialize SDL's subsystems... This code will eventually be moved to display
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
@@ -50,7 +50,7 @@ Display::Display(int width, int height)
         exit(1);
     }
 
-    //SDL_WM_SetIcon(SDL_LoadBMP(LOCATION OF THE ICON BITMAP), NULL);
+    // SDL_WM_SetIcon(SDL_LoadBMP(LOCATION OF THE ICON BITMAP), NULL);
     SDL_WM_SetCaption("Morphling","Morphling");
     if (TTF_Init() == -1)
     {
@@ -87,7 +87,10 @@ Display::Display(int width, int height)
         exit(-3);
     }
 
-
     // load tiles.png
     tilesheet = IMG_Load("tiles.png");
+}
+
+Display::Display(int w, int h){
+    setup(w, h);
 }
