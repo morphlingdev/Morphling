@@ -50,7 +50,7 @@ void Display::setup(int width, int height)
         exit(1);
     }
 
-    // SDL_WM_SetIcon(SDL_LoadBMP(LOCATION OF THE ICON BITMAP), NULL);
+    SDL_WM_SetIcon(SDL_LoadBMP("icon.bmp"), NULL);
     SDL_WM_SetCaption("Morphling","Morphling");
     if (TTF_Init() == -1)
     {
