@@ -12,16 +12,13 @@
 #endif
 
 #include "Map.h"
+#include "Tile.h"
 
 class Display
 {
     SDL_Surface *gScreen;
     SDL_Surface *tilesheet;
 public:
-    enum TileImgId
-    {
-        TILE_GRASS, TILE_LAVA, TILE_WATER, TILE_SAND, TILE_MOUNTAIN
-    };
 
     // initializer, destructor
     Display(){};
@@ -30,8 +27,9 @@ public:
     // methods
     void setup(int width, int height);
     void putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
-    void draw_tile(int x, int y, int id);
+    void draw_tile(int x, int y, Tile::TileImgId id);
     void draw_map(int x, int y, Map *m);
+    void draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh);
     void update();
 };
 

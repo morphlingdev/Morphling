@@ -17,7 +17,7 @@ void Display::update()
 }
 
 /* Draw tile such that its upper-left pixel is at (x, y) */
-void Display::draw_tile(int x, int y, int id)
+void Display::draw_tile(int x, int y, Tile::TileImgId id)
 {
     SDL_Rect srcrect, dstrect;
     dstrect.x = x;
@@ -32,9 +32,15 @@ void Display::draw_tile(int x, int y, int id)
 
 void Display::draw_map(int x, int y, Map *m)
 {
-	for(int i=0;i<m->getWidth();i++){
-		for(int j=0;j<m->getHeight();j++){
-			draw_tile(i*24+x, j*24+y, m->tileAt(i, j)->getAppearance());
+    draw_map(x, y, m, 0, 0, m->getWidth(), m->getHeight());
+	return;
+}
+
+void Display::draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh)
+{
+	for(int i=0;i<mw;i++){
+		for(int j=0;j<mh;j++){
+			draw_tile(y+i*24, y+j*24, m->tileAt(mx+i, my+j)->getAppearance());
 		}
 	}
 	return;

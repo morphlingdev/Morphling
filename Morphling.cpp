@@ -9,7 +9,7 @@ void Game::init()
     // initialize it with a delicious generated map
     M.generate_perlin();
 	
-	// draw a map for ULTIMATE lulz
+	// draw the map for ULTIMATE lulz
     dsp.draw_map(0, 0, &M);
     
     // update the stuff shown on screen
@@ -25,7 +25,8 @@ int Game::handle_event(SDL_Event &event){
         switch (event.key.keysym.sym)
         {
           case SDLK_SPACE:
-            M.setup(30, 30);
+            // regenerate map
+            M.setup(20, 20);
             M.generate_perlin();
             dsp.draw_map(0, 0, &M);
             dsp.update();

@@ -3,12 +3,21 @@
 
 class Tile
 {
-	int appearance;
 public:
-	int getAppearance(){ return appearance; }
-	void setAppearance(int appearance){ this->appearance = appearance; }
-	Tile(int appearance=0){
-		this->appearance = appearance;
+
+    enum TileImgId
+    {
+        IMG_GRASS, IMG_LAVA, IMG_WATER, IMG_SAND, IMG_MOUNTAIN
+    };
+
+private:
+	TileImgId appearance;
+public:
+
+	TileImgId getAppearance(){ return appearance; }
+	void setAppearance(TileImgId appearance){ this->appearance = appearance; }
+	Tile(TileImgId appearance=IMG_GRASS){
+		setAppearance(appearance);
 	}
 };
 

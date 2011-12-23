@@ -23,19 +23,19 @@ void Map::generate_perlin(){
             //Temporary placeholder... eventually it will do something more impressive
             if(p.n(i, j) > 0.7)
             {
-                t[i][j].setAppearance(4); // mountain
+                t[i][j].setAppearance(Tile::IMG_MOUNTAIN); // mountain
             }
             else if(p.n(i, j) > 0.1)
             {
-                t[i][j].setAppearance(0); // grass
+                t[i][j].setAppearance(Tile::IMG_GRASS); // grass
             }
             else if(p.n(i, j) > -0.2)
             {
-                t[i][j].setAppearance(3); // sand
+                t[i][j].setAppearance(Tile::IMG_SAND); // sand
             }
             else
             {
-                t[i][j].setAppearance(2); // water
+                t[i][j].setAppearance(Tile::IMG_WATER); // water
             }
         }
 	}
