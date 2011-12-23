@@ -1,6 +1,24 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+/* Display.h
+
+Contains the Display class, which creates the window and handles graphical drawing.
+
+General argument order for Display items:
+target position
+target size
+source (image, text, etc.)
+source attributes (e.g. for text):
+    size
+    color
+    
+source position (for cropping)
+source size (for cropping)
+*/
+
+#include <string>
+
 #if defined(_MSC_VER)
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -18,6 +36,8 @@ class Display
 {
     SDL_Surface *gScreen;
     SDL_Surface *tilesheet;
+    TTF_Font *fnt;
+    
 public:
 
     // initializer, destructor
@@ -30,6 +50,7 @@ public:
     void draw_tile(int x, int y, Tile::TileImgId id);
     void draw_map(int x, int y, Map *m);
     void draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh);
+    void draw_text(int x, int y, std::string txt, int r, int g, int b);
     void update();
 };
 

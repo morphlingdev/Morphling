@@ -15,6 +15,7 @@
 
 #include "Display.h"
 #include "Ability.h"
+#include "Entity.h"
 
 #define TOTALWIDTH 1024
 #define TOTALHEIGHT 768
@@ -23,6 +24,10 @@ class Game{
 private:
     Display dsp;
     Map M;
+    Player P; // the player's own entity
+    int P_x;
+    int P_y;
+
 public:
     // constructor and destructor
     Game(){};
@@ -31,6 +36,7 @@ public:
     // functions
     void init();
     int handle_event(SDL_Event &evt);
+    void redraw();
 };
 
 #endif

@@ -46,6 +46,23 @@ void Display::draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh)
 	return;
 }
 
+void Display::draw_text(int x, int y, std::string txt, int r, int g, int b)
+{
+    SDL_Color col;
+    SDL_Rect dst;
+    
+    col.r = r;
+    col.g = g;
+    col.b = b;
+    
+    dst.x = x;
+    dst.y = y;
+    
+    SDL_Surface *render = TTF_RenderText_Solid(fnt, txt.c_str(), col);
+    SDL_BlitSurface(render, NULL, gScreen, &dst);
+    SDL_FreeSurface(render);
+}
+
 /* Initialize graphics */
 void Display::setup(int width, int height)
 {
@@ -95,6 +112,9 @@ void Display::setup(int width, int height)
 
     // load tiles.png
     tilesheet = IMG_Load("tiles.png");
+    
+    // load font
+    fnt = TTF_OpenFont("DejaVuSans.ttf", 12);
 }
 
 Display::Display(int w, int h){
