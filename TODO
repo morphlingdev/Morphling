@@ -1,3 +1,4 @@
+Oct. 20
 Currently we have:
 -Basic Display
 -Basic Ability
@@ -9,5 +10,20 @@ We need:
 -Full Map (grid, creature pointer)
 -Full User Interface (input)
 
-Changelog:
+Changes:
 V1 Added Base Ideas
+
+Dec. 30
+We probably should make Display contain an instance of MessageLog or move gScreen to Game. I don't like having to make messagelog get it from display.
+Also we need to make MessageLog fully functional with a queue of messages.
+
+
+
+
+
+
+
+
+
+Changes:
+V2 MessageLog added, need to make it fully functional
