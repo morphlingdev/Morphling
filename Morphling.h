@@ -16,6 +16,7 @@
 #include "Display.h"
 #include "Ability.h"
 #include "Entity.h"
+#include "MessageLog.h"
 
 #define TOTALWIDTH 1024
 #define TOTALHEIGHT 768
@@ -25,16 +26,23 @@ private:
     Display dsp;
     Map M;
     Player P; // the player's own entity
+    MessageLog out;
     int P_x;
     int P_y;
+    int state;
 
 public:
+    // game states
+    enum TileImgId
+    {
+        GS_MENU, GS_GAME, GS_PAUSE
+    };
+
     // constructor and destructor
-    Game(){};
+    Game();
     ~Game(){};
-    
+
     // functions
-    void init();
     int handle_event(SDL_Event &evt);
     void redraw();
 };

@@ -12,7 +12,7 @@ source (image, text, etc.)
 source attributes (e.g. for text):
     size
     color
-    
+
 source position (for cropping)
 source size (for cropping)
 */
@@ -36,21 +36,23 @@ class Display
 {
     SDL_Surface *gScreen;
     SDL_Surface *tilesheet;
-    TTF_Font *fnt;
-    
+
 public:
 
     // initializer, destructor
     Display(){};
     Display(int width, int height);
 
+    // accssors
+    SDL_Surface* get_screen() {return gScreen;};
+
     // methods
-    void setup(int width, int height);
     void putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
     void draw_tile(int x, int y, Tile::TileImgId id);
     void draw_map(int x, int y, Map *m);
     void draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh);
-    void draw_text(int x, int y, std::string txt, int r, int g, int b);
+    // Moved this functionality into MessageLog class
+    // void draw_text(int x, int y, std::string txt, int r, int g, int b);
     void update();
 };
 
