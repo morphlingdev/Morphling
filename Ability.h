@@ -21,20 +21,20 @@ const int COST_NUMBER = 3; //how many types of costs there are
 class Ability
 {
 private:
-std::string name;
-std::string desc;
-int target_type;
-int range;
-int aoe_size;
-int aoe_shape;
-int channel_time;
-int cooldown;
-int passive[STAT_NUMBER];
-int costs[COST_NUMBER];
+    std::string name;
+    std::string desc;
+    int target_type;
+    int range;
+    int aoe_size;
+    int aoe_shape;
+    int channel_time;
+    int cooldown;
+    int passive[STAT_NUMBER];
+    int costs[COST_NUMBER];
 
 public:
 
-Ability(std::string);
+    Ability(std::string);
 };
 
 #endif

@@ -20,7 +20,7 @@ void Player::death() // Goto here when player dies
 {
     hp = maxhp/2; // Attributes when
     m = maxm;     // respawning
-    gp /= 2;      // 
+    gp /= 2;      //
     // Need spawning mechanism
     return;
 }
@@ -37,16 +37,52 @@ void Player::level_up()
     return;
 }
 
-std::string& Entity::name() {return n;}             //
-std::string& Entity::type() {return t;}             //
-int& Entity::maxHitpoints() {return maxhp;}         //
-int& Entity::hitpoints() {return hp;}               //
-int& Entity::maxMana() {return maxm;}               //
-int& Entity::mana() {return m;}                     // Class functions defined
-int& Entity::strength() {return str;}               // to access private/protected
-int& Entity::armor() {return amr;}                  // members
-int& Entity::level() {return lvl;}                  //
-std::list<Ability>& Entity::abilities() {return a;} //
+std::string& Entity::name()
+{
+    return n;    //
+}
+std::string& Entity::type()
+{
+    return t;    //
+}
+int& Entity::maxHitpoints()
+{
+    return maxhp;    //
+}
+int& Entity::hitpoints()
+{
+    return hp;    //
+}
+int& Entity::maxMana()
+{
+    return maxm;    //
+}
+int& Entity::mana()
+{
+    return m;    // Class functions defined
+}
+int& Entity::strength()
+{
+    return str;    // to access private/protected
+}
+int& Entity::armor()
+{
+    return amr;    // members
+}
+int& Entity::level()
+{
+    return lvl;    //
+}
+std::list<Ability>& Entity::abilities()
+{
+    return a;    //
+}
 //std::list<Item>& Player::items() {return i;}        //
-int& Player::gold() {return gp;}                    //
-int& Player::experience() {return xp;}
+int& Player::gold()
+{
+    return gp;    //
+}
+int& Player::experience()
+{
+    return xp;
+}

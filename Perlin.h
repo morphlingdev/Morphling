@@ -30,7 +30,8 @@ private:
         double f = (1 - cos(ft)) * .5;
         return  a * (1 - f) + b*f;
     }
-    double interpolated_noise(double x,double y,int octave) {
+    double interpolated_noise(double x,double y,int octave)
+    {
         int int_x = (int)floor(x);
         double frac_x = x - (int_x + 0.0);
 
@@ -71,7 +72,7 @@ public:
         zoom = _zoom;
         seed = _seed;
     }
-    
+
     Perlin()
     {
         // Add defaults some day?

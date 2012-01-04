@@ -41,15 +41,16 @@ class Display
 public:
 
     // initializer, destructor
-    Display(){};
+    Display() {};
     Display(int width, int height);
-    
+
     // enums
-    enum FontType{
+    enum FontType
+    {
         FONT_SMALL,
         FONT_MEDIUM,
     };
-    
+
     // methods
     void putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
     void draw_tile(int x, int y, Tile::TileImgId id);

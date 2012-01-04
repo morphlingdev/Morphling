@@ -20,7 +20,10 @@ void Display::update()
 void Display::fill_rect(int x, int y, int w, int h, int r, int g, int b)
 {
     SDL_Rect dstrect;
-    dstrect.x = x; dstrect.y = y; dstrect.w = w; dstrect.h = h;
+    dstrect.x = x;
+    dstrect.y = y;
+    dstrect.w = w;
+    dstrect.h = h;
     SDL_FillRect(gScreen, &dstrect, SDL_MapRGB(gScreen->format, r, g, b));
     return;
 }
@@ -42,17 +45,19 @@ void Display::draw_tile(int x, int y, Tile::TileImgId id)
 void Display::draw_map(int x, int y, Map *m)
 {
     draw_map(x, y, m, 0, 0, m->getWidth(), m->getHeight());
-	return;
+    return;
 }
 
 void Display::draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh)
 {
-	for(int i=0;i<mw;i++){
-		for(int j=0;j<mh;j++){
-			draw_tile(y+i*24, y+j*24, m->tileAt(mx+i, my+j)->getAppearance());
-		}
-	}
-	return;
+    for(int i=0; i<mw; i++)
+    {
+        for(int j=0; j<mh; j++)
+        {
+            draw_tile(y+i*24, y+j*24, m->tileAt(mx+i, my+j)->getAppearance());
+        }
+    }
+    return;
 }
 
 /* Text drawing */
@@ -68,13 +73,13 @@ void Display::draw_text_line(int x, int y, std::string txt, FontType type, int r
 {
     SDL_Color col;
     SDL_Rect dst;
-    
+
     col.r = r;
     col.g = g;
     col.b = b;
     dst.x = x;
     dst.y = y;
-    
+
     draw_text_line(&dst, txt, type, col);
 }
 
@@ -86,13 +91,15 @@ void Display::draw_text_block(int x, int y, int w, std::string txt, FontType typ
     line_height = TTF_FontLineSkip(font[type]);
     chars_per_line = w/char_width;
     num_lines = txt.length()/chars_per_line + 1;
-    for(int i=0;i<num_lines;i++){
+    for(int i=0; i<num_lines; i++)
+    {
         draw_text_line(x, y+(i*line_height), txt.substr(i*chars_per_line, chars_per_line), type, r, g, b);
     }
 }
 
 /* Initialize graphics */
-Display::Display(int width, int height){
+Display::Display(int width, int height)
+{
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
     {
         fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());
@@ -133,7 +140,7 @@ Display::Display(int width, int height){
         fprintf(stderr, "Unable to set up video: %s\n", SDL_GetError());
         exit(-3);
     }
-    
+
     // load resources
     tilesheet = IMG_Load("tiles.png");
     font[FONT_SMALL] = TTF_OpenFont("DejaVuSansMono.ttf", 12);

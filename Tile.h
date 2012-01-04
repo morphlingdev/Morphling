@@ -11,14 +11,21 @@ public:
     };
 
 private:
-	TileImgId appearance;
+    TileImgId appearance;
 public:
 
-	TileImgId getAppearance(){ return appearance; }
-	void setAppearance(TileImgId appearance){ this->appearance = appearance; }
-	Tile(TileImgId appearance=IMG_GRASS){
-		setAppearance(appearance);
-	}
+    TileImgId getAppearance()
+    {
+        return appearance;
+    }
+    void setAppearance(TileImgId appearance)
+    {
+        this->appearance = appearance;
+    }
+    Tile(TileImgId appearance=IMG_GRASS)
+    {
+        setAppearance(appearance);
+    }
 };
 
 #endif
