@@ -36,23 +36,29 @@ class Display
 {
     SDL_Surface *gScreen;
     SDL_Surface *tilesheet;
+    TTF_Font *font[2];
 
 public:
 
     // initializer, destructor
     Display(){};
     Display(int width, int height);
-
-    // accssors
-    SDL_Surface* get_screen() {return gScreen;};
-
+    
+    // enums
+    enum FontType{
+        FONT_SMALL,
+        FONT_MEDIUM,
+    };
+    
     // methods
     void putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
     void draw_tile(int x, int y, Tile::TileImgId id);
+    void fill_rect(int x, int y, int w, int h, int r, int g, int b);
     void draw_map(int x, int y, Map *m);
     void draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh);
-    // Moved this functionality into MessageLog class
-    // void draw_text(int x, int y, std::string txt, int r, int g, int b);
+    void draw_text_line(SDL_Rect *dst, std::string txt, FontType type, SDL_Color col);
+    void draw_text_line(int x, int y, std::string txt, FontType type, int r, int g, int b);
+    void draw_text_block(int x, int y, int w, std::string txt, FontType type, int r, int g, int b);
     void update();
 };
 

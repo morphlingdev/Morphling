@@ -1,12 +1,11 @@
 #include "Morphling.h"
 
-Game::Game() : dsp(1024, 768),out("log.txt", dsp.get_screen())
+Game::Game() : dsp(1024, 768),out("log.txt")
 {
-    //currently we default to in-game
+    out << "Welcome to Morphling.\n";
+    
+    // currently we default to in-game
     state = GS_GAME;
-
-    //set up message log with our display
-
 
     // Set up player -- SHOULD BE WRITTEN IN DATA FILE LATER INSTEAD OF HARDCODED
     P.maxHitpoints() = 100;
@@ -30,7 +29,7 @@ int Game::handle_event(SDL_Event &event)
             switch (event.type)
             {
               case SDL_QUIT:
-                return 1;
+                state = GS_QUIT;
               case SDL_KEYDOWN:
                 switch (event.key.keysym.sym)
                 {
@@ -50,7 +49,7 @@ int Game::handle_event(SDL_Event &event)
                     // regenerate map
                     M.setup(100, 100);
                     M.generate_perlin();
-                    out << "Talking talk";
+                    out << "Talking talk\n";
                     break;
                 }
                 redraw();
@@ -59,12 +58,18 @@ int Game::handle_event(SDL_Event &event)
                 return 0;
             }
             break;
+        case GS_QUIT:
+            SDL_Quit();
+            exit(0);
+        default:
+            exit(9001);
     }
 }
 
 void Game::redraw()
 {
     dsp.draw_map(0, 0, &M, P_x-12, P_y-12, 25, 25);
+    out.draw_to(&dsp);
     dsp.update();
 }
 

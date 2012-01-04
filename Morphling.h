@@ -33,9 +33,9 @@ private:
 
 public:
     // game states
-    enum TileImgId
+    enum GameState
     {
-        GS_MENU, GS_GAME, GS_PAUSE
+        GS_QUIT, GS_MENU, GS_GAME, GS_PAUSE
     };
 
     // constructor and destructor

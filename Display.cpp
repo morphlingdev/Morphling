@@ -16,6 +16,15 @@ void Display::update()
     return;
 }
 
+/* Fills a rectangle, top-left corner at (x, y), dimensions (w, h), colored (r, g, b) */
+void Display::fill_rect(int x, int y, int w, int h, int r, int g, int b)
+{
+    SDL_Rect dstrect;
+    dstrect.x = x; dstrect.y = y; dstrect.w = w; dstrect.h = h;
+    SDL_FillRect(gScreen, &dstrect, SDL_MapRGB(gScreen->format, r, g, b));
+    return;
+}
+
 /* Draw tile such that its upper-left pixel is at (x, y) */
 void Display::draw_tile(int x, int y, Tile::TileImgId id)
 {
@@ -46,23 +55,41 @@ void Display::draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh)
 	return;
 }
 
-// Moved this functionality into MessageLog class
-/*void Display::draw_text(int x, int y, std::string txt, int r, int g, int b)
+/* Text drawing */
+void Display::draw_text_line(SDL_Rect *dst, std::string txt, FontType type, SDL_Color col)
+{
+    SDL_Surface *render = TTF_RenderText_Solid(font[type], txt.c_str(), col);
+    SDL_BlitSurface(render, NULL, gScreen, dst);
+    SDL_FreeSurface(render);
+    return;
+}
+
+void Display::draw_text_line(int x, int y, std::string txt, FontType type, int r, int g, int b)
 {
     SDL_Color col;
     SDL_Rect dst;
-
+    
     col.r = r;
     col.g = g;
     col.b = b;
-
     dst.x = x;
     dst.y = y;
+    
+    draw_text_line(&dst, txt, type, col);
+}
 
-    SDL_Surface *render = TTF_RenderText_Solid(fnt, txt.c_str(), col);
-    SDL_BlitSurface(render, NULL, gScreen, &dst);
-    SDL_FreeSurface(render);
-}*/
+/* draw a text block, top-left corner at (x, y) with width w, with REALLY basic character wrapping */
+void Display::draw_text_block(int x, int y, int w, std::string txt, FontType type, int r, int g, int b)
+{
+    int char_width, line_height, chars_per_line, num_lines;
+    TTF_SizeText(font[type], "a", &char_width, NULL);
+    line_height = TTF_FontLineSkip(font[type]);
+    chars_per_line = w/char_width;
+    num_lines = txt.length()/chars_per_line + 1;
+    for(int i=0;i<num_lines;i++){
+        draw_text_line(x, y+(i*line_height), txt.substr(i*chars_per_line, chars_per_line), type, r, g, b);
+    }
+}
 
 /* Initialize graphics */
 Display::Display(int width, int height){
@@ -79,8 +106,6 @@ Display::Display(int width, int height){
         printf("Unable to initialize SDL_ttf: %s \n", TTF_GetError());
         exit(2);
     }
-
-
 
     /* Get available fullscreen/hardware modes */
     SDL_Rect ** modes=SDL_ListModes(NULL, SDL_FULLSCREEN|SDL_HWSURFACE);
@@ -108,7 +133,9 @@ Display::Display(int width, int height){
         fprintf(stderr, "Unable to set up video: %s\n", SDL_GetError());
         exit(-3);
     }
-
-    // load tiles.png
+    
+    // load resources
     tilesheet = IMG_Load("tiles.png");
+    font[FONT_SMALL] = TTF_OpenFont("DejaVuSansMono.ttf", 12);
+    font[FONT_MEDIUM] = TTF_OpenFont("DejaVuSansMono.ttf", 18);
 }

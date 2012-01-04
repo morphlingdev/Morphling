@@ -1,20 +1,10 @@
 #ifndef MESSAGELOG_H
 #define MESSAGELOG_H
 
-
-#if defined(_MSC_VER)
-#include "SDL.h"
-#include "SDL_ttf.h"
-#include "SDL_image.h"
-#else
-#include "SDL/SDL.h"
-#include "SDL/SDL_ttf.h"
-#include "SDL/SDL_image.h"
-#endif
-
-
 #include <fstream>
 #include <queue>
+
+#include "Display.h"
 
 class MessageLog
 {
@@ -23,15 +13,18 @@ class MessageLog
     std::ofstream log;
     int x;
     int y;
-    SDL_Color col;
-    TTF_Font *fnt;
-    std::queue<std::string> messages;
-    SDL_Surface* gScreen;
+    std::vector<std::string> messages;
 
     public:
+    // writing messages
     MessageLog& operator<<(std::string msg);
     void errormsg(std::string msg);
-    MessageLog(std::string fname, SDL_Surface* s);
+    
+    // drawing to display
+    void draw_to(Display *dsp);
+    
+    // constructor and destructor
+    MessageLog(std::string fname);
     ~MessageLog();
 };
 

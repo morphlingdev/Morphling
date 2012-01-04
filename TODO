@@ -1,29 +1,26 @@
-Oct. 20
-Currently we have:
+===We have===
 -Basic Display
 -Basic Ability
 
-We need:
+===We need===
 -Full Display (blit, grid map system, text system)
 -Full Ability (consuming, experience)
 -Full Creature (stats, abilities, xy location)
 -Full Map (grid, creature pointer)
 -Full User Interface (input)
 
-Changes:
-V1 Added Base Ideas
+=== TODOs ===
+--MessageLog--
+Make fully functional with a vector of messages.
+draw_to(): Draw last N messages instead of just last message
 
-Dec. 30
-We probably should make Display contain an instance of MessageLog or move gScreen to Game. I don't like having to make messagelog get it from display.
-Also we need to make MessageLog fully functional with a queue of messages.
-
-
-
-
-
+--Display--
+draw_text_*: Make less unreadable
+draw_text_*: Don't render line breaks, which appear as a square on-screen (stupid SDL_TTF)
+draw_text_block: Proper word wrapping, not just crude character wrapping
 
 
 
 
-Changes:
+===Changes===
 V2 MessageLog added, need to make it fully functional
