@@ -41,7 +41,6 @@ class Display
 public:
 
     // initializer, destructor
-    Display() {};
     Display(int width, int height);
 
     // enums
