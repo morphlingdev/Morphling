@@ -80,6 +80,23 @@ void Display::draw_text_block(int x, int y, int w, std::string txt, FontType typ
 }
 
 /*
+ * Sprites
+ */
+
+/* Draw a sprite, top left corner of pixel location at (x, y) */
+void Display::draw_sprite(int x, int y, Sprite sid, SpriteState sstate)
+{
+    SDL_Rect srcrect, dstrect;
+    dstrect.x = x;
+    dstrect.y = y;
+    srcrect.x = sstate*24;
+    srcrect.y = sid*24;
+    srcrect.w = 24;
+    srcrect.h = 24;
+    SDL_BlitSurface(spritesheet, &srcrect, gScreen, &dstrect);
+}
+
+/*
  * Tiles and Maps
  */
 
@@ -171,6 +188,7 @@ Display::Display(int width, int height)
 
     // load resources
     tilesheet = IMG_Load("tiles.png");
+    spritesheet = IMG_Load("sprites.png");
     font[FONT_SMALL] = TTF_OpenFont("DejaVuSansMono.ttf", 12);
     font[FONT_MEDIUM] = TTF_OpenFont("DejaVuSansMono.ttf", 18);
 }

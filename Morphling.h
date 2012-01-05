@@ -30,6 +30,8 @@ private:
     MessageLog out;
     int P_x;
     int P_y;
+    Display::Sprite P_sprite;
+    Display::SpriteState P_spritestate;
     int state;
 
 public:

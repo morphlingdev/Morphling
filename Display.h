@@ -48,6 +48,17 @@ public:
         FONT_SMALL,
         FONT_MEDIUM,
     };
+    enum Sprite
+    {
+        SPRITE_PLAYERARROW
+    };
+    enum SpriteState
+    {
+        SPRITE_STATE_FACING_SOUTH,
+        SPRITE_STATE_FACING_EAST,
+        SPRITE_STATE_FACING_NORTH,
+        SPRITE_STATE_FACING_WEST
+    };
 
     // methods
     // primitives
@@ -58,6 +69,8 @@ public:
     void draw_text_line(SDL_Rect *dst, std::string txt, FontType type, SDL_Color col);
     void draw_text_line(int x, int y, std::string txt, FontType type, int r, int g, int b);
     void draw_text_block(int x, int y, int w, std::string txt, FontType type, int r, int g, int b);
+    // sprites
+    void draw_sprite(int x, int y, Sprite sid, SpriteState sstate);
     // tile & map
     void draw_tile(int x, int y, Tile::TileImgId id);
     void draw_map(int x, int y, Map *m);
