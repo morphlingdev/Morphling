@@ -19,8 +19,8 @@ MessageLog& MessageLog::operator<<(std::string msg)
 /// TODO: draw last N messages
 void MessageLog::draw_to(Display *dsp)
 {
-    dsp->fill_rect(x, y, 50, 800, 0, 0, 0); /// HACKY HACK
-    dsp->draw_text_block(x, y, 50, messages.back(), Display::FONT_SMALL, 255, 255, 255);
+    dsp->fill_rect(x, y, 200, 800, 0, 0, 0); /// HACKY HACK
+    dsp->draw_text_block(x, y, 200, messages.back(), Display::FONT_SMALL, 255, 255, 255);
 }
 
 void MessageLog::errormsg(std::string msg)
