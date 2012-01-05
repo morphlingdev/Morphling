@@ -42,21 +42,24 @@ void Display::draw_tile(int x, int y, Tile::TileImgId id)
     return;
 }
 
-void Display::draw_map(int x, int y, Map *m)
+void Display::draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh)
 {
-    draw_map(x, y, m, 0, 0, m->getWidth(), m->getHeight());
+    fill_rect(x, y, mw*24, mh*24, 0, 0, 0);
+    for(int i=0; i<mw; i++)
+    {
+        if(mx+i < 0 or mx+i >= m->getWidth()) continue;
+        for(int j=0; j<mh; j++)
+        {
+            if(my+j < 0 or my+j >= m->getHeight()) continue;
+            draw_tile(x+i*24, y+j*24, m->tileAt(mx+i, my+j)->getAppearance());
+        }
+    }
     return;
 }
 
-void Display::draw_map(int x, int y, Map *m, int mx, int my, int mw, int mh)
+void Display::draw_map(int x, int y, Map *m)
 {
-    for(int i=0; i<mw; i++)
-    {
-        for(int j=0; j<mh; j++)
-        {
-            draw_tile(y+i*24, y+j*24, m->tileAt(mx+i, my+j)->getAppearance());
-        }
-    }
+    draw_map(x, y, m, 0, 0, m->getWidth(), m->getHeight());
     return;
 }
 
