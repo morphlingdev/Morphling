@@ -1,6 +1,6 @@
 #include "Morphling.h"
 
-Game::Game() : dsp(1024, 768),out("log.txt")
+Game::Game() : dsp(1024, 768), out("log.txt"), M(100, 100)
 {
     out << "Welcome to Morphling.\n";
     
@@ -16,9 +16,7 @@ Game::Game() : dsp(1024, 768),out("log.txt")
     P_sprite = Display::SPRITE_PLAYERARROW;
     P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
 
-	// create 100x100 map
-    M.setup(100, 100);
-    // initialize it with a delicious generated map
+    // initialize map with delicious perlin noise
     M.generate_perlin();
 
     redraw();
@@ -53,8 +51,7 @@ int Game::handle_event(SDL_Event &event)
                     P_spritestate = Display::SPRITE_STATE_FACING_WEST;
                     break;
                   case SDLK_SPACE:
-                    // regenerate map
-                    M.setup(100, 100);
+                    // generate a new map
                     M.generate_perlin();
                     out << "Talking talk\n";
                     break;

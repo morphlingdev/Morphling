@@ -52,6 +52,7 @@ Map::Map(int w, int h)
 
 Map::Map()
 {
+    setup(10, 10);
 }
 
 Map::~Map()
