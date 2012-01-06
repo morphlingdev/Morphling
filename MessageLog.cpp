@@ -10,7 +10,7 @@ MessageLog::MessageLog(std::string fname) : errors("errors.txt"), log(fname.c_st
 // used much like the STL standard streams
 MessageLog& MessageLog::operator<<(std::string msg)
 {
-    log << msg;
+    log << msg << std::flush;
     messages.push_back(msg);
     return *this;
 }
@@ -29,4 +29,6 @@ void MessageLog::errormsg(std::string msg)
 
 MessageLog::~MessageLog()
 {
+    log.close();
 }
+
