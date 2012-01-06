@@ -12,7 +12,7 @@ class Entity
 protected:
     std::string name;
     std::string type;
-    
+
     /* Basic attributes */
     int maxhp; // health
     int hp;
@@ -21,17 +21,17 @@ protected:
     int str; // strength
     int armor; // armor level
     int lvl; // experience level
-    
+
     /* Position information */
     int x;
     int y;
-    
+
     // abilities
     std::list<Ability> a;
 public:
     Entity(); // Constructor
     ~Entity(); // Destructor
-    
+
     // Accessors and mutators
     std::string getName();
     std::string setName(std::string value);
@@ -60,11 +60,11 @@ public:
     int addLevel(int value);
     std::list<Ability> getAbilities();
     std::list<Ability> setAbilities(std::list<Ability> value);
-    
+
     int getX();
     int getY();
-    int setPosition(int x, int y);
-    int move(int x, int y);
+    void setPosition(int x, int y);
+    void move(int x, int y);
 };
 
 class Player : public Entity
@@ -74,7 +74,7 @@ class Player : public Entity
     // Need to implement level-up system etc.
     int xp; // Experience
 public:
-    Player(); 
+    Player();
     //std::list<Item>& items();
     int getGold();
     int setGold(int value);

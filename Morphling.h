@@ -24,9 +24,9 @@
 class Game
 {
 private:
-    Display dsp;
     Map M;
     Player P; // the player's own entity
+    Display dsp;
     MessageLog out;
     Display::Sprite P_sprite;
     Display::SpriteState P_spritestate;
@@ -44,8 +44,9 @@ public:
     ~Game() {};
 
     // functions
-    int handle_event(SDL_Event &evt);
+    void handle_event(SDL_Event &evt);
     void redraw();
+    int getState();
 };
 
 #endif

@@ -1,9 +1,9 @@
 #include "Morphling.h"
 
-Game::Game() : dsp(1024, 768), out("log.txt"), M(100, 100)
+Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
 {
     out << "Welcome to Morphling. Walk around using the arrow keys. Press the space bar to generate a new map.\n";
-    
+
     // currently we default to in-game
     state = GS_GAME;
 
@@ -20,52 +20,59 @@ Game::Game() : dsp(1024, 768), out("log.txt"), M(100, 100)
     redraw();
 }
 
-int Game::handle_event(SDL_Event &event)
+int Game::getState()
+{
+    return state;
+}
+
+void Game::handle_event(SDL_Event &event)
 {
     switch (state)
     {
-        case GS_GAME:
-            switch (event.type)
+    case GS_GAME:
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            state = GS_QUIT;
+        case SDL_KEYDOWN:
+            switch (event.key.keysym.sym)
             {
-              case SDL_QUIT:
-                state = GS_QUIT;
-              case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
-                  case SDLK_UP:
-                    P.move(0, -1);
-                    P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
-                    break;
-                  case SDLK_RIGHT:
-                    P.move(1, 0);
-                    P_spritestate = Display::SPRITE_STATE_FACING_EAST;
-                    break;
-                  case SDLK_DOWN:
-                    P.move(0, 1);
-                    P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
-                    break;
-                  case SDLK_LEFT:
-                    P.move(-1, 0);
-                    P_spritestate = Display::SPRITE_STATE_FACING_WEST;
-                    break;
-                  case SDLK_SPACE:
-                    // generate a new map
-                    M.generate_perlin();
-                    out << "New map generated.\n";
-                    break;
-                }
-                redraw();
+            case SDLK_UP:
+                P.move(0, -1);
+                P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
                 break;
-              default:
-                return 0;
+            case SDLK_RIGHT:
+                P.move(1, 0);
+                P_spritestate = Display::SPRITE_STATE_FACING_EAST;
+                break;
+            case SDLK_DOWN:
+                P.move(0, 1);
+                P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+                break;
+            case SDLK_LEFT:
+                P.move(-1, 0);
+                P_spritestate = Display::SPRITE_STATE_FACING_WEST;
+                break;
+            case SDLK_SPACE:
+                // generate a new map
+                M.generate_perlin();
+                out << "New map generated.\n";
+                break;
+            default:
+                break;
             }
+            redraw();
             break;
-        case GS_QUIT:
-            SDL_Quit();
-            exit(0);
         default:
-            exit(9001);
+            return;
+        }
+        break;
+    case GS_QUIT:
+        return;
+    default:
+        exit(9001);
     }
+    return;
 }
 
 void Game::redraw()
@@ -91,10 +98,10 @@ int main(int argc, char *argv[])
     {
         while (SDL_PollEvent(&event))
         {
-            int status = G.handle_event(event);
-            if(status == 1) loop = false;
+            G.handle_event(event);
+            if(G.getState() == Game::GS_QUIT) loop = false;
         }
-        SDL_Delay(1000/30);
+        SDL_Delay(1000.00/30.00);
     }
     return 0;
 }
