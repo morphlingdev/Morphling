@@ -2,7 +2,7 @@
 
 Game::Game() : dsp(1024, 768), out("log.txt"), M(100, 100)
 {
-    out << "Welcome to Morphling.\n";
+    out << "Welcome to Morphling. Walk around using the arrow keys. Press the space bar to generate a new map.\n";
     
     // currently we default to in-game
     state = GS_GAME;
@@ -53,7 +53,7 @@ int Game::handle_event(SDL_Event &event)
                   case SDLK_SPACE:
                     // generate a new map
                     M.generate_perlin();
-                    out << "Talking talk\n";
+                    out << "New map generated.\n";
                     break;
                 }
                 redraw();
