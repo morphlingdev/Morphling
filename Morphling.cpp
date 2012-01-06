@@ -9,8 +9,8 @@ Game::Game() : dsp(1024, 768), out("log.txt"), M(100, 100)
 
     // Set up player -- SHOULD BE WRITTEN IN DATA FILE LATER INSTEAD OF HARDCODED
     //               -- SHOULD ALSO BE PUT INTO 
-    P.maxHitpoints() = 100;
-    P.hitpoints() = 100;
+    P.setMaxHP(100);
+    P.setHP(100);
     P_x = 20;
     P_y = 20;
     P_sprite = Display::SPRITE_PLAYERARROW;
