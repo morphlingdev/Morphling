@@ -54,6 +54,11 @@ int Entity::addLevel(int value){ lvl += value; return lvl; }
 std::list<Ability> Entity::getAbilities(){ return a; }
 std::list<Ability> Entity::setAbilities(std::list<Ability> value){ a = value; return a; }
 
+int Entity::getX(){ return x; }
+int Entity::getY(){ return y; }
+int Entity::setPosition(int x, int y){ this->x = x; this->y = y; }
+int Entity::move(int x, int y){ this->x += x; this-> y += y; }
+
 /*
  * Player
  */

@@ -22,6 +22,10 @@ protected:
     int armor; // armor level
     int lvl; // experience level
     
+    /* Position information */
+    int x;
+    int y;
+    
     // abilities
     std::list<Ability> a;
 public:
@@ -56,6 +60,11 @@ public:
     int addLevel(int value);
     std::list<Ability> getAbilities();
     std::list<Ability> setAbilities(std::list<Ability> value);
+    
+    int getX();
+    int getY();
+    int setPosition(int x, int y);
+    int move(int x, int y);
 };
 
 class Player : public Entity

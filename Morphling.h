@@ -28,8 +28,6 @@ private:
     Map M;
     Player P; // the player's own entity
     MessageLog out;
-    int P_x;
-    int P_y;
     Display::Sprite P_sprite;
     Display::SpriteState P_spritestate;
     int state;

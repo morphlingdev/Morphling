@@ -8,11 +8,9 @@ Game::Game() : dsp(1024, 768), out("log.txt"), M(100, 100)
     state = GS_GAME;
 
     // Set up player -- SHOULD BE WRITTEN IN DATA FILE LATER INSTEAD OF HARDCODED
-    //               -- SHOULD ALSO BE PUT INTO 
     P.setMaxHP(100);
     P.setHP(100);
-    P_x = 20;
-    P_y = 20;
+    P.setPosition(20, 20);
     P_sprite = Display::SPRITE_PLAYERARROW;
     P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
 
@@ -35,19 +33,19 @@ int Game::handle_event(SDL_Event &event)
                 switch (event.key.keysym.sym)
                 {
                   case SDLK_UP:
-                    P_y -= 1;
+                    P.move(0, -1);
                     P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
                     break;
                   case SDLK_RIGHT:
-                    P_x += 1;
+                    P.move(1, 0);
                     P_spritestate = Display::SPRITE_STATE_FACING_EAST;
                     break;
                   case SDLK_DOWN:
-                    P_y += 1;
+                    P.move(0, 1);
                     P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
                     break;
                   case SDLK_LEFT:
-                    P_x -= 1;
+                    P.move(-1, 0);
                     P_spritestate = Display::SPRITE_STATE_FACING_WEST;
                     break;
                   case SDLK_SPACE:
@@ -72,7 +70,7 @@ int Game::handle_event(SDL_Event &event)
 
 void Game::redraw()
 {
-    dsp.draw_map(0, 0, &M, P_x-12, P_y-12, 25, 25);
+    dsp.draw_map(0, 0, &M, P.getX()-12, P.getY()-12, 25, 25);
     dsp.draw_sprite(12*24, 12*24, P_sprite, P_spritestate);
     out.draw_to(&dsp);
     dsp.update();
