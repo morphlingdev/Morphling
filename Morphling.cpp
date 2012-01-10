@@ -13,6 +13,9 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P.setPosition(20, 20);
     P_sprite = Display::SPRITE_PLAYERARROW;
     P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+    P_dx = 0;
+    P_dy = 0;
+    P_movespeed = 100;
 
     // initialize map with delicious perlin noise
     M.generate_perlin();
@@ -38,20 +41,16 @@ void Game::handle_event(SDL_Event &event)
             switch (event.key.keysym.sym)
             {
             case SDLK_UP:
-                P.move(0, -1);
-                P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
+                P_dy = -1;
                 break;
             case SDLK_RIGHT:
-                P.move(1, 0);
-                P_spritestate = Display::SPRITE_STATE_FACING_EAST;
+                P_dx = 1;
                 break;
             case SDLK_DOWN:
-                P.move(0, 1);
-                P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+                P_dy = 1;
                 break;
             case SDLK_LEFT:
-                P.move(-1, 0);
-                P_spritestate = Display::SPRITE_STATE_FACING_WEST;
+                P_dx = -1;
                 break;
             case SDLK_SPACE:
                 // generate a new map
@@ -61,8 +60,25 @@ void Game::handle_event(SDL_Event &event)
             default:
                 break;
             }
-            redraw();
             break;
+        case SDL_KEYUP:
+            switch (event.key.keysym.sym)
+            {
+            case SDLK_UP:
+                P_dy = 0;
+                break;
+            case SDLK_RIGHT:
+                P_dx = 0;
+                break;
+            case SDLK_DOWN:
+                P_dy = 0;
+                break;
+            case SDLK_LEFT:
+                P_dx = 0;
+                break;
+            default:
+                break;
+            }
         default:
             return;
         }
@@ -73,6 +89,18 @@ void Game::handle_event(SDL_Event &event)
         exit(9001);
     }
     return;
+}
+
+void Game::handle_logic()
+{
+    if(SDL_GetTicks() - P_lastmove > P_movespeed){
+        P.move(P_dx, P_dy);
+        P_lastmove = SDL_GetTicks();
+        if(P_dx > 0) P_spritestate = Display::SPRITE_STATE_FACING_EAST;
+        else if(P_dx < 0) P_spritestate = Display::SPRITE_STATE_FACING_WEST;
+        else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
+        else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+    }
 }
 
 void Game::redraw()
@@ -101,7 +129,9 @@ int main(int argc, char *argv[])
             G.handle_event(event);
             if(G.getState() == Game::GS_QUIT) loop = false;
         }
-        SDL_Delay(1000.00/30.00);
+        G.handle_logic();
+        G.redraw();
+        SDL_Delay(1000.00/30.00); // 30 fps, both graphics and game
     }
     return 0;
 }

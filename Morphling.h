@@ -26,10 +26,14 @@ class Game
 private:
     Map M;
     Player P; // the player's own entity
-    Display dsp;
-    MessageLog out;
     Display::Sprite P_sprite;
     Display::SpriteState P_spritestate;
+    int P_dx;
+    int P_dy;
+    int P_lastmove;
+    int P_movespeed;
+    Display dsp;
+    MessageLog out;
     int state;
 
 public:
@@ -45,6 +49,7 @@ public:
 
     // functions
     void handle_event(SDL_Event &evt);
+    void handle_logic();
     void redraw();
     int getState();
 };
