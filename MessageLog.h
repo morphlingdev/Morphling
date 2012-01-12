@@ -21,6 +21,7 @@ public:
     void errormsg(std::string msg);
 
     // drawing to display
+    void draw_to(Display *dsp, int width, int height);
     void draw_to(Display *dsp);
 
     // constructor and destructor

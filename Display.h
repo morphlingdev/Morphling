@@ -68,7 +68,7 @@ public:
     // text
     void draw_text_line(SDL_Rect *dst, std::string txt, FontType type, SDL_Color col);
     void draw_text_line(int x, int y, std::string txt, FontType type, int r, int g, int b);
-    void draw_text_block(int x, int y, int w, std::string txt, FontType type, int r, int g, int b);
+    int draw_text_block(int x, int y, int w, std::string txt, FontType type, int r, int g, int b);
     // sprites
     void draw_sprite(int x, int y, Sprite sid, SpriteState sstate);
     // tile & map

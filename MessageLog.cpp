@@ -15,12 +15,22 @@ MessageLog& MessageLog::operator<<(std::string msg)
     return *this;
 }
 
-// draws last message onto the display
-/// TODO: draw last N messages
+
+
+// draws messages onto the display until width and height in pixels is reached
+void MessageLog::draw_to(Display *dsp, int width, int height)
+{
+    int height_drawn = 0;
+    dsp->fill_rect(x, y, 600, height+100, 0, 0, 0);
+    for(int i=messages.size()-1; height_drawn<height && i>=0; i--){
+        height_drawn += dsp->draw_text_block(x, y+height_drawn, width, messages[i], Display::FONT_SMALL, 255, 255, 255);
+    }
+}
+
+// draws messages onto the display until 600 pixels of height are reached
 void MessageLog::draw_to(Display *dsp)
 {
-    dsp->fill_rect(x, y, 200, 800, 0, 0, 0); /// HACKY HACK
-    dsp->draw_text_block(x, y, 200, messages.back(), Display::FONT_SMALL, 255, 255, 255);
+    draw_to(dsp, 400, 600);
 }
 
 void MessageLog::errormsg(std::string msg)
