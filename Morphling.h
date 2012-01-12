@@ -32,6 +32,7 @@ private:
     int P_dy;
     int P_lastmove;
     int P_movespeed;
+    int LastTick;
     Display dsp;
     MessageLog out;
     int state;

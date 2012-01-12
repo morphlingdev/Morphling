@@ -93,13 +93,23 @@ void Game::handle_event(SDL_Event &event)
 
 void Game::handle_logic()
 {
-    if(SDL_GetTicks() - P_lastmove > P_movespeed){
+    if((P_dx != 0 or P_dy != 0) and SDL_GetTicks() - P_lastmove > P_movespeed){
         P.move(P_dx, P_dy);
         P_lastmove = SDL_GetTicks();
         if(P_dx > 0) P_spritestate = Display::SPRITE_STATE_FACING_EAST;
         else if(P_dx < 0) P_spritestate = Display::SPRITE_STATE_FACING_WEST;
         else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
         else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+        
+    }
+    
+    if(SDL_GetTicks() - LastTick > 1000) // One check every second
+    {
+        LastTick = SDL_GetTicks();
+        if(M.tileAt(P.getX(), P.getY())->getAppearance() == Tile::IMG_WATER)
+        {
+            out << "You are drowning!\n";
+        }
     }
 }
 
