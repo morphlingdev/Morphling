@@ -16,6 +16,7 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P_dx = 0;
     P_dy = 0;
     P_movespeed = 100;
+    P_skip = 0;
 
     // initialize map with delicious perlin noise
     M.generate_perlin();
@@ -91,9 +92,17 @@ void Game::handle_event(SDL_Event &event)
     return;
 }
 
-void Game::handle_logic()
+bool Game::tick()
 {
-    if((P_dx != 0 or P_dy != 0) and SDL_GetTicks() - P_lastmove > P_movespeed){
+    bool mv = false;
+    return mv;
+}
+
+void Game::P_turn()
+{
+    while(tick()
+    if((P_dx != 0 or P_dy != 0) and SDL_GetTicks() - P_lastmove > P_movespeed)
+    {
         P.move(P_dx, P_dy);
         P_lastmove = SDL_GetTicks();
         if(P_dx > 0) P_spritestate = Display::SPRITE_STATE_FACING_EAST;
@@ -103,6 +112,7 @@ void Game::handle_logic()
         
     }
     
+
     if(SDL_GetTicks() - LastTick > 1000) // One check every second
     {
         LastTick = SDL_GetTicks();
@@ -119,6 +129,18 @@ void Game::redraw()
     dsp.draw_sprite(12*24, 12*24, P_sprite, P_spritestate);
     out.draw_to(&dsp);
     dsp.update();
+}
+
+bool Game::move_req()
+{
+    bool mv = false;
+    if(P_skip)
+    {
+        mv = true;
+        P_skip--;
+    }
+    if(P_dx != 0 || P_dy != 0) mv = true;
+    return mv;
 }
 
 int main(int argc, char *argv[])
@@ -138,8 +160,8 @@ int main(int argc, char *argv[])
         {
             G.handle_event(event);
             if(G.getState() == Game::GS_QUIT) loop = false;
+            if(G.move_req()) G.P_turn();
         }
-        G.handle_logic();
         G.redraw();
         SDL_Delay(1000.00/30.00); // 30 fps, both graphics and game
     }
