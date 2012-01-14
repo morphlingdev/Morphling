@@ -17,29 +17,72 @@ void Map::setup(int w, int h)
 void Map::generate_perlin()
 {
     //Initialize Perlin Noise
-    p = Perlin(5, 0.5, 0.1, std::rand());
+    elevation = Perlin(5, 0.5, 0.1, std::rand());
+    rainfall = Perlin(5, 0.5, 0.1, std::rand());
     //5 octaves, 0.5 persistance (roughness, high is more rough), 0.1 zoom (1.0 is "each tile completely random"), random seed
 
     for(int i = 0; i < getWidth(); i++)
     {
         for(int j = 0; j < getHeight(); j++)
         {
-            //Temporary placeholder... eventually it will do something more impressive
-            if(p.n(i, j) > 0.7)
+            double e = elevation.n(i, j);
+            double r = rainfall.n(i, j);
+            if(e > 0.9)
             {
-                t[i][j].setAppearance(Tile::IMG_MOUNTAIN); // mountain
+                t[i][j].setAppearance(Tile::IMG_MOUNTAIN);
             }
-            else if(p.n(i, j) > 0.1)
+            else if(e > 0.7)
             {
-                t[i][j].setAppearance(Tile::IMG_GRASS); // grass
+                t[i][j].setAppearance(Tile::IMG_ROCK);
             }
-            else if(p.n(i, j) > -0.2)
+            else if(e > 0.1)
             {
-                t[i][j].setAppearance(Tile::IMG_SAND); // sand
+                if(r > 0.95)
+                {
+                    t[i][j].setAppearance(Tile::IMG_WETLAND);
+                }
+                else if(r > 0.3)
+                {
+                    t[i][j].setAppearance(Tile::IMG_FOREST);
+                }
+                else if(r > -0.9)
+                {
+                    t[i][j].setAppearance(Tile::IMG_GRASS);
+                }
+                else
+                {
+                    t[i][j].setAppearance(Tile::IMG_SAND);
+                }
+            }
+            else if(e > -0.2)
+            {
+                if(r > 0.9)
+                {
+                    t[i][j].setAppearance(Tile::IMG_WETLAND);
+                }
+                else
+                {
+                    t[i][j].setAppearance(Tile::IMG_SAND);
+                }
+            }
+            else if(e > -0.3)
+            {
+                if(r > -0.8)
+                {
+                    t[i][j].setAppearance(Tile::IMG_WATER);
+                }
+                else
+                {
+                    t[i][j].setAppearance(Tile::IMG_WETLAND);
+                }
+            }
+            else if(e > -0.7)
+            {
+                t[i][j].setAppearance(Tile::IMG_WATER);
             }
             else
             {
-                t[i][j].setAppearance(Tile::IMG_WATER); // water
+                t[i][j].setAppearance(Tile::IMG_DEEPWATER);
             }
         }
     }

@@ -50,7 +50,8 @@ public:
     };
     enum Sprite
     {
-        SPRITE_PLAYERARROW
+        SPRITE_SENTIENT_ARROW,
+        SPRITE_TAR_IMP,
     };
     enum SpriteState
     {

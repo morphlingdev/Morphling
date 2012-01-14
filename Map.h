@@ -9,7 +9,7 @@ class Map
 private:
     Tile **t;
     int width, height;
-    Perlin p;
+    Perlin elevation, rainfall;
 public:
     Tile* tileAt(int x, int y);
     int getWidth()

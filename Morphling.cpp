@@ -11,7 +11,7 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P.setMaxHP(100);
     P.setHP(100);
     P.setPosition(20, 20);
-    P_sprite = Display::SPRITE_PLAYERARROW;
+    P_sprite = Display::SPRITE_TAR_IMP;
     P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
     P_dx = 0;
     P_dy = 0;
@@ -107,7 +107,7 @@ void Game::P_turn()
     else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
     else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
     
-    if(M.tileAt(P.getX(), P.getY())->getAppearance() == Tile::IMG_WATER)
+    if(M.tileAt(P.getX(), P.getY())->getAppearance() == Tile::IMG_DEEPWATER)
     {
         out << "You are drowning!\n";
     }
