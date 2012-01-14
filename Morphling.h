@@ -32,6 +32,7 @@ private:
     int P_dy;
     int P_lastmove;
     int P_movespeed;
+    int P_skip;
     int LastTick;
     Display dsp;
     MessageLog out;
@@ -50,9 +51,10 @@ public:
 
     // functions
     void handle_event(SDL_Event &evt);
-    void handle_logic();
+    void P_turn();
     void redraw();
     int getState();
+    bool move_req();
 };
 
 #endif
