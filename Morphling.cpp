@@ -94,33 +94,25 @@ void Game::handle_event(SDL_Event &event)
 
 bool Game::tick()
 {
+    num_ticks++;
     bool mv = false;
     return mv;
 }
 
 void Game::P_turn()
 {
-    while(tick()
-    if((P_dx != 0 or P_dy != 0) and SDL_GetTicks() - P_lastmove > P_movespeed)
+    P.move(P_dx, P_dy);
+    if(P_dx > 0) P_spritestate = Display::SPRITE_STATE_FACING_EAST;
+    else if(P_dx < 0) P_spritestate = Display::SPRITE_STATE_FACING_WEST;
+    else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
+    else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+    
+    if(M.tileAt(P.getX(), P.getY())->getAppearance() == Tile::IMG_WATER)
     {
-        P.move(P_dx, P_dy);
-        P_lastmove = SDL_GetTicks();
-        if(P_dx > 0) P_spritestate = Display::SPRITE_STATE_FACING_EAST;
-        else if(P_dx < 0) P_spritestate = Display::SPRITE_STATE_FACING_WEST;
-        else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
-        else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
-        
+        out << "You are drowning!\n";
     }
     
-
-    if(SDL_GetTicks() - LastTick > 1000) // One check every second
-    {
-        LastTick = SDL_GetTicks();
-        if(M.tileAt(P.getX(), P.getY())->getAppearance() == Tile::IMG_WATER)
-        {
-            out << "You are drowning!\n";
-        }
-    }
+    while(tick()); // Handle all non-player entities
 }
 
 void Game::redraw()
@@ -143,6 +135,31 @@ bool Game::move_req()
     return mv;
 }
 
+int Game::main_loop()
+{
+    // Poll for events, and handle the ones we care about.
+    SDL_Event event;
+    
+    bool loop = true;
+    int P_lastmove;
+    while(loop)
+    {
+        while (SDL_PollEvent(&event))
+        {
+            handle_event(event);
+            if(getState() == Game::GS_QUIT) loop = false;
+        }
+        
+        if(move_req() and SDL_GetTicks() - P_lastmove > 100){
+            P_lastmove = SDL_GetTicks();
+            P_turn();
+        }
+        redraw();
+        SDL_Delay(1000.00/30.00); // 30 fps, both graphics and game
+    }
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     // seed random with processor ticks, pseudorandom enough
@@ -150,20 +167,9 @@ int main(int argc, char *argv[])
 
     // Initialize game engine
     Game G;
-
-    // Poll for events, and handle the ones we care about.
-    SDL_Event event;
-    bool loop = true;
-    while(loop)
-    {
-        while (SDL_PollEvent(&event))
-        {
-            G.handle_event(event);
-            if(G.getState() == Game::GS_QUIT) loop = false;
-            if(G.move_req()) G.P_turn();
-        }
-        G.redraw();
-        SDL_Delay(1000.00/30.00); // 30 fps, both graphics and game
-    }
-    return 0;
+    
+    // Quickly delegate the program to the game engine (short main functions are fashionable)
+    int result = G.main_loop();
+    
+    return result;
 }

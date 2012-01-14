@@ -28,12 +28,12 @@ private:
     Player P; // the player's own entity
     Display::Sprite P_sprite;
     Display::SpriteState P_spritestate;
+    int num_ticks;
     int P_dx;
     int P_dy;
     int P_lastmove;
     int P_movespeed;
     int P_skip;
-    int LastTick;
     Display dsp;
     MessageLog out;
     int state;
@@ -51,10 +51,12 @@ public:
 
     // functions
     void handle_event(SDL_Event &evt);
+    bool tick();
     void P_turn();
     void redraw();
     int getState();
     bool move_req();
+    int main_loop();
 };
 
 #endif
