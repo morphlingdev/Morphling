@@ -58,6 +58,14 @@ void Game::handle_event(SDL_Event &event)
                 M.generate_perlin();
                 out << "New map generated.\n";
                 break;
+            case SDLK_PERIOD:
+                // skip a single turn
+                P_skip = 1;
+                break;
+            case SDLK_5:
+                // skip 10 turns
+                P_skip = 10;
+                break;
             default:
                 break;
             }
@@ -110,6 +118,7 @@ void Game::P_turn()
     if(M.tileAt(P.getX(), P.getY())->getAppearance() == Tile::IMG_DEEPWATER)
     {
         out << "You are drowning!\n";
+        P.addHP(-1);
     }
     
     while(tick()); // Handle all non-player entities
@@ -117,9 +126,21 @@ void Game::P_turn()
 
 void Game::redraw()
 {
+    // map
     dsp.draw_map(0, 0, &M, P.getX()-12, P.getY()-12, 25, 25);
+    
+    // player's sprite
     dsp.draw_sprite(12*24, 12*24, P_sprite, P_spritestate);
+    
+    // message log
     out.draw_to(&dsp);
+    
+    // health bar
+    dsp.fill_rect(0, 605, 600, 20, 0, 0, 0);
+    dsp.fill_rect(0, 605, P.getHP()*600/P.getMaxHP(), 20, 255, 0, 0);
+    dsp.draw_rect(0, 605, 600, 20, 255, 255, 255);
+    
+    // finally, put everything on the screen
     dsp.update();
 }
 
@@ -153,9 +174,9 @@ int Game::main_loop()
         if(move_req() and SDL_GetTicks() - P_lastmove > 100){
             P_lastmove = SDL_GetTicks();
             P_turn();
+            redraw();
         }
-        redraw();
-        SDL_Delay(1000.00/30.00); // 30 fps, both graphics and game
+        SDL_Delay(1000.00/30.00); // 30 fps
     }
     return 0;
 }

@@ -65,7 +65,9 @@ public:
     // primitives
     void update();
     void putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
+    void draw_line(int x1, int y1, int x2, int y2, int r, int g, int b);
     void fill_rect(int x, int y, int w, int h, int r, int g, int b);
+    void draw_rect(int x, int y, int w, int h, int r, int g, int b);
     // text
     void draw_text_line(SDL_Rect *dst, std::string txt, FontType type, SDL_Color col);
     void draw_text_line(int x, int y, std::string txt, FontType type, int r, int g, int b);

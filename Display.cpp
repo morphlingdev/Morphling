@@ -19,11 +19,45 @@ void Display::update()
 }
 
 /* Changes a single pixel, located at (x, y), to (r, g, b) */
-void Display::putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b)
+inline void Display::putpixel(int x, int y, uint8_t r, uint8_t g, uint8_t b)
 {
-    if(SDL_MUSTLOCK(gScreen)) SDL_LockSurface(gScreen);
     *((Uint32*)gScreen->pixels+gScreen->w*y + x) = SDL_MapRGB(gScreen->format, r, g, b);
+    return;
+}
+
+/* Draws a line from (x1,y1) to (x2,y2) using Bresenham's line algorithm */
+void Display::draw_line(int x1, int y1, int x2, int y2, int r, int g, int b)
+{
+    int dx, dy, sx, sy, err;
+    dx = std::abs(x2-x1);
+    dy = std::abs(y2-y1);
+    if(x1 < x2) sx = 1;
+    else sx = -1;
+    if(y1 < y2) sy = 1;
+    else sy = -1;
+    err = dx-dy;
+    
+    if(SDL_MUSTLOCK(gScreen)) SDL_LockSurface(gScreen);
+    
+    while(x1 != x2 or y1 != y2)
+    {
+        putpixel(x1, y1, r, g, b);
+        int e2 = 2*err;
+        if(e2 > -dy)
+        {
+            err = err - dy;
+            x1 = x1 + sx;
+        }
+        if(e2 < dx)
+        {
+            err = err + dx;
+            y1 = y1 + sy;
+        }
+    }
+    putpixel(x2, y2, r, g, b);
+    
     if(SDL_MUSTLOCK(gScreen)) SDL_UnlockSurface(gScreen);
+    
     return;
 }
 
@@ -36,6 +70,16 @@ void Display::fill_rect(int x, int y, int w, int h, int r, int g, int b)
     dstrect.w = w;
     dstrect.h = h;
     SDL_FillRect(gScreen, &dstrect, SDL_MapRGB(gScreen->format, r, g, b));
+    return;
+}
+
+/* Draws, but not fills, the specified rectangle. */
+void Display::draw_rect(int x, int y, int w, int h, int r, int g, int b)
+{
+    draw_line(x, y, x+w, y, r, g, b); // top
+    draw_line(x, y+1, x, y+h, r, g, b); // left
+    draw_line(x+w, y+1, x+w, y+h, r, g, b); // right
+    draw_line(x+1, y+h, x+w-1, y+h, r, g, b); // bottom
     return;
 }
 
