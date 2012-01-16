@@ -57,6 +57,7 @@ void Game::handle_event(SDL_Event &event)
                 // generate a new map
                 M.generate_perlin();
                 out << "New map generated.\n";
+                redraw();
                 break;
             case SDLK_PERIOD:
                 // skip a single turn
@@ -171,7 +172,7 @@ int Game::main_loop()
             if(getState() == Game::GS_QUIT) loop = false;
         }
         
-        if(move_req() and SDL_GetTicks() - P_lastmove > 100){
+        if(SDL_GetTicks() - P_lastmove > 100 and move_req()){
             P_lastmove = SDL_GetTicks();
             P_turn();
             redraw();
