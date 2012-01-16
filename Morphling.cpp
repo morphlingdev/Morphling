@@ -116,13 +116,26 @@ void Game::P_turn()
     else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
     else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
     
-    if(M.tileAt(P.getX(), P.getY())->getAppearance() == Tile::IMG_DEEPWATER)
+    Tile::TileImgId t = M.tileAt(P.getX(), P.getY())->getAppearance();
+    if(t == Tile::IMG_DEEPWATER)
     {
         out << "You are drowning!\n";
         P.addHP(-1);
     }
+    else if(t == Tile::IMG_MOUNTAIN)
+    {
+        out << "You are blocked by the mountains!\n";
+        P.move(-P_dx, -P_dy);
+    }
     
     while(tick()); // Handle all non-player entities
+    
+    if(P.getHP() <= 0)
+    {
+        out << "You have died.\n\nThe Great Wind carries your spirit to the middle of the world, where it reassociates with a physical body.\n\nBe more cautious in your journeys!\n";
+        P.death();
+        P.setPosition(50, 50);
+    }
 }
 
 void Game::redraw()
