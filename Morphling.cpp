@@ -66,6 +66,7 @@ void Game::handle_event(SDL_Event &event)
             case SDLK_5:
                 // skip 10 turns
                 P_skip = 10;
+                out << "Waiting...\n";
                 break;
             default:
                 break;
@@ -110,27 +111,50 @@ bool Game::tick()
 
 void Game::P_turn()
 {
-    P.move(P_dx, P_dy);
-    if(P_dx > 0) P_spritestate = Display::SPRITE_STATE_FACING_EAST;
-    else if(P_dx < 0) P_spritestate = Display::SPRITE_STATE_FACING_WEST;
-    else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
-    else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+    Tile::TileImgId t; // the tile the player is about to move onto
     
-    Tile::TileImgId t = M.tileAt(P.getX(), P.getY())->getAppearance();
+    t = M.tileAt(P.getX()+P_dx, P.getY()+P_dy)->getAppearance();
+    
+    if(t == Tile::IMG_MOUNTAIN) // trying to move onto a mountain?
+    {
+        out << "You are blocked by the mountains!\n";
+    }
+    else if(P_skip > 0)
+    {
+        if(P_dx != 0 || P_dy != 0)
+        {
+            out << "Movement interrupt.\n";
+            P_skip = 0;
+        }
+        else
+        {
+            P_skip--;
+            if(P_skip == 0)
+            {
+                out << "Done.\n";
+            }
+        }
+    }
+    else // okay, move success
+    {
+        P.move(P_dx, P_dy);
+        if(P_dx > 0) P_spritestate = Display::SPRITE_STATE_FACING_EAST;
+        else if(P_dx < 0) P_spritestate = Display::SPRITE_STATE_FACING_WEST;
+        else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
+        else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+    }
+    
+    t = M.tileAt(P.getX(), P.getY())->getAppearance();
+    
     if(t == Tile::IMG_DEEPWATER)
     {
         out << "You are drowning!\n";
         P.addHP(-1);
     }
-    else if(t == Tile::IMG_MOUNTAIN)
-    {
-        out << "You are blocked by the mountains!\n";
-        P.move(-P_dx, -P_dy);
-    }
     
     while(tick()); // Handle all non-player entities
     
-    if(P.getHP() <= 0)
+    if(P.getHP() <= 0) // Handle death
     {
         out << "You have died.\n\nThe Great Wind carries your spirit to the middle of the world, where it reassociates with a physical body.\n\nBe more cautious in your journeys!\n";
         P.death();
@@ -161,10 +185,9 @@ void Game::redraw()
 bool Game::move_req()
 {
     bool mv = false;
-    if(P_skip)
+    if(P_skip > 0)
     {
         mv = true;
-        P_skip--;
     }
     if(P_dx != 0 || P_dy != 0) mv = true;
     return mv;
