@@ -11,18 +11,13 @@
 
 === TODOs ===
 --MessageLog--
-Make fully functional with a vector of messages.
-draw_to(): Draw last N messages instead of just last message
 
 --Display--
-draw_text_*: Make less unreadable
-draw_text_*: Don't render line breaks, which appear as a square on-screen (stupid SDL_TTF)
 draw_text_block: Proper word wrapping, not just crude character wrapping
 
 --Game--
 Game(): Load player stats from file instead of hardcoding
 Game(): Move P_* variables from Game to the actual Player class
-
 
 ===Changes===
 V2 MessageLog added, need to make it fully functional
