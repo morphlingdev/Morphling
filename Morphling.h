@@ -37,6 +37,13 @@ private:
     Display dsp;
     MessageLog out;
     int state;
+    struct
+    {
+        bool up_arrow;
+        bool down_arrow;
+        bool right_arrow;
+        bool left_arrow;
+    } keys_down;
 
 public:
     // game states
@@ -57,6 +64,7 @@ public:
     int getState();
     bool move_req();
     int main_loop();
+    void calc_move();
 };
 
 #endif
