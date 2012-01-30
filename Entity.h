@@ -6,6 +6,7 @@
 #include <list>
 
 #include "Ability.h"
+#include "Item.h"
 
 class Entity
 {
@@ -30,7 +31,7 @@ protected:
     std::list<Ability> a;
 public:
     Entity(); // Constructor
-    ~Entity(); // Destructor
+    virtual ~Entity(); // Destructor declared virtual so that the destructor binds late (dreaded memory leaks)
 
     // Accessors and mutators
     std::string getName();
@@ -60,6 +61,7 @@ public:
     int addLevel(int value);
     std::list<Ability> getAbilities();
     std::list<Ability> setAbilities(std::list<Ability> value);
+	virtual void death() = 0; // abstract death function
 
     int getX();
     int getY();
@@ -69,13 +71,15 @@ public:
 
 class Player : public Entity
 {
-    //std::list<Item> i; // Inventory
+    std::list<Item> i; // Inventory
     int gp; // Gold pieces
     // Need to implement level-up system etc.
     int xp; // Experience
 public:
     Player();
-    //std::list<Item>& items();
+	~Player();
+    std::list<Item> getItems();
+	std::list<Item> setItems(std::list<Item> value);
     int getGold();
     int setGold(int value);
     int addGold(int value);
@@ -84,6 +88,18 @@ public:
     int addXP(int value);
     void death(); // Goto here when player dies
     void level_up(); // Goto here when player levels up
+};
+
+class Creature : public Entity
+{
+protected:
+	std::list<Item> d; // drops
+public:
+	std::list<Item> getDrops();
+	std::list<Item> setDrops(std::list<Item> value);
+	void death(Player P);
+	Creature();
+	~Creature();
 };
 
 #endif
