@@ -10,7 +10,7 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     // Set up player -- SHOULD BE WRITTEN IN DATA FILE LATER INSTEAD OF HARDCODED
     P.setMaxHP(100);
     P.setHP(100);
-    P.setPosition(20, 20);
+    P.setPosition(50, 50); // Consistent with death (instead of (20,20))
     P_sprite = Display::SPRITE_TAR_IMP;
     P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
     P_dx = 0;

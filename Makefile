@@ -3,7 +3,7 @@ CC=g++
 
 CFLAGS=-c -lSDL -lSDL_ttf
 LDFLAGS=-lSDL -lSDL_ttf -lSDL_image
-SOURCES=Morphling.cpp Display.cpp Ability.cpp Map.cpp Tile.cpp Entity.cpp MessageLog.cpp
+SOURCES=Morphling.cpp Display.cpp Ability.cpp Map.cpp Tile.cpp Entity.cpp MessageLog.cpp Item.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Morphling
 
