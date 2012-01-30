@@ -302,7 +302,6 @@ void Creature::death(Player P) // Goto here when creature dies
 	std::list<Item> temp = P.getItems();
 	temp.splice(temp.begin(),d);
 	P.setItems(temp);
-	return;
 	P.addXP(lvl * 10);
 	// remove the creature
 	return;
