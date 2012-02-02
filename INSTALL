@@ -1,0 +1,41 @@
+Download the Repo
+
+To begin the installation process, you must first fork the source code into your Github account.
+
+Step 1: Fork the "Morphling" repo
+
+To fork this project, click the "Fork" button. Right now, though, the source files are only on Github, and you must clone the project on the computer to compile or to work on the project.
+
+Step 2: Clone the "Morphling" repo
+
+Run the following code:
+	$ git clone git@github.com:username/Morphling.git
+Replace username with your user name.
+
+Step 3: Configure remotes
+
+When a repo is cloned, it has a default remote called origin that points to your fork on GitHub, not the original repo it was forked from. To keep track of the original repo, you need to add another remote named upstream:
+	$ cd Morphling
+	$ git remote add upstream git://github.com/morphlingdev/Morphling.git
+	$ git fetch upstream
+
+Compile the Source Code
+
+This program uses make to compile itself. Download GNU Make here. To compile, simply run:
+	$ cd Morphling
+	$ make
+This makes executable Morphling.exe in the same folder.
+
+Run Morphling
+
+To run, simply open Morphling.exe.
+
+Updating
+
+Since Morphling is currently in Alpha stage, it is constantly being updated. To update, run the following code:
+	$ cd Morphling
+	$ git fetch upstream
+	$ git merge upstream/master
+	$ make clean
+	$ make
+Then run Morphling.exe.
