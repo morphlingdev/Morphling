@@ -60,6 +60,7 @@ void Game::handle_event(SDL_Event &event)
                 break;
             case SDLK_SPACE:
                 // generate a new map
+                P.setPosition(50,50); // so that when the player dies he does not appear on a "bad" tile; also for consistency
                 do
                 {
                     M.generate_perlin();
