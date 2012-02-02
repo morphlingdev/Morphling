@@ -230,7 +230,7 @@ int Game::main_loop()
 int main(int argc, char *argv[])
 {
     // seed random with processor ticks, pseudorandom enough
-    srand(SDL_GetTicks());
+    srand(time(NULL));
 
     // Initialize game engine
     Game G;
