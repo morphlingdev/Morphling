@@ -24,11 +24,11 @@ Compile the Source Code
 This program uses make to compile itself. Download GNU Make here. To compile, simply run:
 	$ cd Morphling
 	$ make
-This makes executable Morphling.exe in the same folder.
+This makes executable Morphling in the same folder.
 
 Run Morphling
 
-To run, simply open Morphling.exe.
+To run, simply open Morphling.
 
 Updating
 
@@ -38,4 +38,4 @@ Since Morphling is currently in Alpha stage, it is constantly being updated. To 
 	$ git merge upstream/master
 	$ make clean
 	$ make
-Then run Morphling.exe.
+Then run Morphling.
