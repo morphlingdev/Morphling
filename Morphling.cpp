@@ -19,8 +19,12 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P_skip = 0;
     keys_down.down_arrow = keys_down.up_arrow = keys_down.left_arrow = keys_down.right_arrow = false;
 
-    // initialize map with delicious perlin noise
-    M.generate_perlin();
+    // initialize map with delicious perlin noise, regenerating whem map is inadequate
+    do
+    {
+        M.generate_perlin();
+    }
+    while(M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_WATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_DEEPWATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_MOUNTAIN || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_LAVA);
 
     redraw();
 }
@@ -56,7 +60,11 @@ void Game::handle_event(SDL_Event &event)
                 break;
             case SDLK_SPACE:
                 // generate a new map
-                M.generate_perlin();
+                do
+                {
+                    M.generate_perlin();
+                }
+                while(M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_WATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_DEEPWATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_MOUNTAIN || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_LAVA);
                 out << "New map generated.\n";
                 redraw();
                 break;
@@ -217,7 +225,8 @@ int Game::main_loop()
             if(getState() == Game::GS_QUIT) loop = false;
         }
 
-        if(SDL_GetTicks() - P_lastmove > 100 and move_req()){
+        if(SDL_GetTicks() - P_lastmove > 100 and move_req())
+        {
             P_lastmove = SDL_GetTicks();
             P_turn();
             redraw();
