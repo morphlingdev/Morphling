@@ -28,7 +28,7 @@ private:
     Player P; // the player's own entity
     Display::Sprite P_sprite;
     Display::SpriteState P_spritestate;
-    int num_ticks;
+    int tick_count;
     int P_dx;
     int P_dy;
     int P_lastmove;
@@ -62,6 +62,7 @@ public:
     void handle_command(std::string cmd);
     void handle_event(SDL_Event &evt);
     bool tick();
+    void simulate(int num_ticks);
     void P_turn();
     void redraw();
     int getState();

@@ -177,9 +177,14 @@ void Game::handle_event(SDL_Event &event)
 
 bool Game::tick()
 {
-    num_ticks++;
+    tick_count++;
     bool mv = false;
     return mv;
+}
+
+void Game::simulate(int num_ticks)
+{
+    
 }
 
 void Game::P_turn()
