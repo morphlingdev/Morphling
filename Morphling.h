@@ -44,6 +44,8 @@ private:
         bool right_arrow;
         bool left_arrow;
     } keys_down;
+    bool entering_text;
+    std::string entered_text;
 
 public:
     // game states
@@ -57,6 +59,7 @@ public:
     ~Game() {};
 
     // functions
+    void handle_command(std::string cmd);
     void handle_event(SDL_Event &evt);
     bool tick();
     void P_turn();
