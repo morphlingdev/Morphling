@@ -4,12 +4,13 @@ MessageLog::MessageLog(std::string fname) : errors("errors.txt"), log(fname.c_st
 {
     // these should actually be set by something, perhaps display should have a Message Log object
     x = 610;
-    y = 0;
+    y = 100;
 }
 
 // used much like the STL standard streams
 MessageLog& MessageLog::operator<<(std::string msg)
 {
+    
 	// I don't know the width of the log
 	// So I can't manipulate it
     log << msg << std::flush;
@@ -23,16 +24,16 @@ MessageLog& MessageLog::operator<<(std::string msg)
 void MessageLog::draw_to(Display *dsp, int width, int height)
 {
     int height_drawn = 0;
-    dsp->fill_rect(x, y, 600, height+100, 0, 0, 0);
+    dsp->fill_rect(x, y-20, width, height+40, 64, 64, 64);
     for(int i=messages.size()-1; height_drawn<height && i>=0; i--){
-        height_drawn += dsp->draw_text_block(x, y+height_drawn, width, messages[i], Display::FONT_SMALL, 255, 255, 255);
+        height_drawn += dsp->draw_text_block(x, y+height-height_drawn, width, messages[i], Display::FONT_SMALL, 255, 255, 255);
     }
 }
 
-// draws messages onto the display until 600 pixels of height are reached
+// draws messages onto the display until 300 pixels of height are reached
 void MessageLog::draw_to(Display *dsp)
 {
-    draw_to(dsp, 400, 600);
+    draw_to(dsp, 400, 300);
 }
 
 void MessageLog::errormsg(std::string msg)
