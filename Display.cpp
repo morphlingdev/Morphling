@@ -109,21 +109,31 @@ void Display::draw_text_line(int x, int y, std::string txt, FontType type, int r
     draw_text_line(&dst, txt, type, col);
 }
 
-/* Draws text to fit inside a rectangle, with REALLY basic character wrapping */
+/* Draws text to fit inside a rectangle of width w and infinite height, with basic character wrapping */
 int Display::draw_text_block(int x, int y, int w, std::string txt, FontType type, int r, int g, int b)
 {
-    int char_width, char_height, line_height, chars_per_line, pos, line_num;
+    int char_width, char_height, line_height, chars_per_line, pos, line_num, line_count;
     TTF_SizeText(font[type], "a", &char_width, NULL);
     line_height = TTF_FontLineSkip(font[type]);
     chars_per_line = w/char_width;
     
+    line_count = 0;
+    pos = 0;
     line_num = 0;
+    while(pos < txt.length())
+    {
+        int find = txt.find('\n', pos)-pos;
+        int width = std::min(find, chars_per_line);
+        line_count++;
+        pos += width;
+        if(find < chars_per_line) pos++;
+    }
     pos = 0;
     while(pos < txt.length())
     {
         int find = txt.find('\n', pos)-pos;
         int width = std::min(find, chars_per_line);
-        draw_text_line(x, y+(line_num*line_height), txt.substr(pos, width), type, r, g, b);
+        draw_text_line(x, y-(line_count*line_height)+(line_num*line_height), txt.substr(pos, width), type, r, g, b);
         line_num++;
         pos += width;
         if(find < chars_per_line) pos++;
