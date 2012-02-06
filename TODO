@@ -11,6 +11,7 @@
 
 === TODOs ===
 --MessageLog--
+Infinite loop if there's no endline at the end of a message
 
 --Display--
 draw_text_block: Proper word wrapping, not just crude character wrapping
@@ -18,6 +19,7 @@ draw_text_block: Proper word wrapping, not just crude character wrapping
 --Game--
 Game(): Load player stats from file instead of hardcoding
 Game(): Move P_* variables from Game to the actual Player class
+handle_command(): 'suicide' does not immediately kill the player
 
 ===Changes===
 V2 MessageLog added, need to make it fully functional

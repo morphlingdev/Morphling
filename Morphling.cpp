@@ -2,7 +2,7 @@
 
 Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
 {
-    out << "Welcome to Morphling. Walk around using the arrow keys. Press the space bar to generate a new map.\n";
+    out << "Welcome to Morphling. Walk around using the arrow keys. Press the space bar to generate a new map. Press Enter for command entry.\n";
 
     // currently we default to in-game
     state = GS_GAME;
@@ -18,8 +18,9 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P_movespeed = 100;
     P_skip = 0;
     keys_down.down_arrow = keys_down.up_arrow = keys_down.left_arrow = keys_down.right_arrow = false;
+    entering_text = false;
 
-    // initialize map with delicious perlin noise, regenerating whem map is inadequate
+    // initialize map with delicious perlin noise, regenerating when map is inadequate
     do
     {
         M.generate_perlin();
@@ -34,6 +35,33 @@ int Game::getState()
     return state;
 }
 
+void Game::handle_command(std::string cmd)
+{
+    if(cmd.compare("suicide") == 0)
+    {
+        P.setHP(0);
+    }
+    else if(cmd.compare("blink") == 0)
+    {
+        P.move(rand()%7-3, rand()%7-3);
+    }
+    else if(cmd.compare("quit") == 0)
+    {
+        state = GS_QUIT;
+    }
+    else if(cmd.compare("help") == 0)
+    {
+        out << "'suicide' sets your health to 0.\n";
+        out << "'blink' teleports you up to 3 blocks away.\n";
+        out << "'quit' exits Morphling.\n";
+    }
+    else if(cmd.length() > 0)
+    {
+        out << cmd.append(" is an unrecognized command.\nType 'help' for a list of commands.\n");
+    }
+    return;
+}
+
 void Game::handle_event(SDL_Event &event)
 {
     switch (state)
@@ -43,43 +71,78 @@ void Game::handle_event(SDL_Event &event)
         {
         case SDL_QUIT:
             state = GS_QUIT;
+            break;
         case SDL_KEYDOWN:
-            switch (event.key.keysym.sym)
+            if(entering_text)
             {
-            case SDLK_UP:
-                keys_down.up_arrow = true;
-                break;
-            case SDLK_RIGHT:
-                keys_down.right_arrow = true;
-                break;
-            case SDLK_DOWN:
-                keys_down.down_arrow = true;
-                break;
-            case SDLK_LEFT:
-                keys_down.left_arrow = true;
-                break;
-            case SDLK_SPACE:
-                // generate a new map
-                P.setPosition(50,50); // so that when the player dies he does not appear on a "bad" tile; also for consistency
-                do
+                int length;
+                switch (event.key.keysym.sym)
                 {
-                    M.generate_perlin();
+                case SDLK_RETURN:
+                    entering_text = false;
+                    handle_command(entered_text);
+                    entered_text.clear();
+                    SDL_EnableUNICODE(0);
+                    redraw();
+                    break;
+                case SDLK_BACKSPACE:
+                    length = entered_text.length();
+                    if(length >= 0) entered_text.erase(entered_text.length()-1);
+                    redraw();
+                    break;
+                default:
+                    char c = event.key.keysym.unicode;
+                    if(isprint(c))
+                    {
+                        entered_text += c;
+                        redraw();
+                    }
+                    break;
                 }
-                while(M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_WATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_DEEPWATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_MOUNTAIN || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_LAVA);
-                out << "New map generated.\n";
-                redraw();
-                break;
-            case SDLK_PERIOD:
-                // skip a single turn
-                P_skip = 1;
-                break;
-            case SDLK_5:
-                // skip 10 turns
-                P_skip = 10;
-                out << "Waiting...\n";
-                break;
-            default:
-                break;
+            }
+            else
+            {
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_UP:
+                    keys_down.up_arrow = true;
+                    break;
+                case SDLK_RIGHT:
+                    keys_down.right_arrow = true;
+                    break;
+                case SDLK_DOWN:
+                    keys_down.down_arrow = true;
+                    break;
+                case SDLK_LEFT:
+                    keys_down.left_arrow = true;
+                    break;
+                case SDLK_SPACE: // generate a new map
+                    P.setPosition(50,50); // so that when the player dies he does not appear on a "bad" tile; also for consistency
+                    do
+                    {
+                        M.generate_perlin();
+                    }
+                    while(M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_WATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_DEEPWATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_MOUNTAIN || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_LAVA);
+                    out << "New map generated.\n";
+                    redraw();
+                    break;
+                case SDLK_PERIOD:
+                    // skip a single turn
+                    P_skip = 1;
+                    break;
+                case SDLK_5:
+                    // skip 10 turns
+                    P_skip = 10;
+                    out << "Waiting...\n";
+                    break;
+                case SDLK_RETURN:
+                    entering_text = true;
+                    SDL_EnableUNICODE(1);
+                    redraw();
+                    break;
+                default:
+                    break;
+                }
             }
             break;
         case SDL_KEYUP:
@@ -182,6 +245,17 @@ void Game::redraw()
 
     // message log
     out.draw_to(&dsp);
+    
+    // entry bar
+    if(entering_text)
+    {
+        dsp.fill_rect(610, 410, 300, 15, 48, 48, 32);
+        dsp.draw_text_line(610, 410, entered_text, Display::FONT_SMALL, 255, 255, 255); 
+    }
+    else
+    {
+        dsp.fill_rect(610, 410, 300, 15, 32, 32, 32);
+    }
 
     // health bar
     dsp.fill_rect(0, 605, 600, 20, 0, 0, 0);
