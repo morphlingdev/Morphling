@@ -7,6 +7,7 @@
 
 #include "Ability.h"
 #include "Item.h"
+#include "Sprite.h"
 
 class Entity
 {
@@ -22,6 +23,7 @@ protected:
     int str; // strength
     int armor; // armor level
     int lvl; // experience level
+    Sprite appearance;
 
     /* Position information */
     int x;
@@ -59,6 +61,9 @@ public:
     int getLevel();
     int setLevel(int value);
     int addLevel(int value);
+    Sprite &sprite();
+    Sprite getSprite();
+    void setSprite(Sprite a);
     std::list<Ability> getAbilities();
     std::list<Ability> setAbilities(std::list<Ability> value);
 	virtual void death() = 0; // abstract death function

@@ -158,6 +158,22 @@ int Entity::addLevel(int value)
     return lvl;
 }
 
+Sprite& Entity::sprite()
+{
+    return appearance;
+}
+
+Sprite Entity::getSprite()
+{
+    return appearance;
+}
+
+void Entity::setSprite(Sprite s)
+{
+    appearance = s;
+    return;
+}
+
 std::list<Ability> Entity::getAbilities()
 {
     return a;
