@@ -16,7 +16,7 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P_dy = 0;
     P_movespeed = 100;
     P_skip = 0;
-    keys_down.down_arrow = keys_down.up_arrow = keys_down.left_arrow = keys_down.right_arrow = false;
+    keys_down = SDL_GetKeyState(NULL);
     entering_text = false;
 
     // initialize map with delicious perlin noise, regenerating when map is inadequate
@@ -119,18 +119,6 @@ void Game::handle_event(SDL_Event &event)
             {
                 switch (event.key.keysym.sym)
                 {
-                case SDLK_UP:
-                    keys_down.up_arrow = true;
-                    break;
-                case SDLK_RIGHT:
-                    keys_down.right_arrow = true;
-                    break;
-                case SDLK_DOWN:
-                    keys_down.down_arrow = true;
-                    break;
-                case SDLK_LEFT:
-                    keys_down.left_arrow = true;
-                    break;
                 case SDLK_SPACE: // generate a new map
                     P.setPosition(50,50); // so that when the player dies he does not appear on a "bad" tile; also for consistency
                     do
@@ -163,18 +151,6 @@ void Game::handle_event(SDL_Event &event)
         case SDL_KEYUP:
             switch (event.key.keysym.sym)
             {
-            case SDLK_UP:
-                keys_down.up_arrow = false;
-                break;
-            case SDLK_RIGHT:
-                keys_down.right_arrow = false;
-                break;
-            case SDLK_DOWN:
-                keys_down.down_arrow = false;
-                break;
-            case SDLK_LEFT:
-                keys_down.left_arrow = false;
-                break;
             default:
                 break;
             }
@@ -288,8 +264,8 @@ void Game::redraw()
 
 void Game::calc_move()
 {
-    P_dx = int(keys_down.right_arrow) - int(keys_down.left_arrow);
-    P_dy = int(keys_down.down_arrow) - int(keys_down.up_arrow);
+    P_dx = int(keys_down[SDLK_RIGHT]) - int(keys_down[SDLK_LEFT]);
+    P_dy = int(keys_down[SDLK_DOWN]) - int(keys_down[SDLK_UP]);
     return;
 }
 

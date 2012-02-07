@@ -37,13 +37,7 @@ private:
     Display dsp;
     MessageLog out;
     int state;
-    struct
-    {
-        bool up_arrow;
-        bool down_arrow;
-        bool right_arrow;
-        bool left_arrow;
-    } keys_down;
+    Uint8 *keys_down;
     bool entering_text;
     std::string entered_text;
 
