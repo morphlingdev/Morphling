@@ -39,6 +39,7 @@ void Game::handle_command(std::string cmd)
     if(cmd.compare("suicide") == 0)
     {
         P.setHP(0);
+        P_turn();
     }
     else if(cmd.compare("n") == 0)
     {
@@ -188,24 +189,13 @@ void Game::P_turn()
     {
         out << "You are blocked by the mountains!\n";
     }
-    else if(P_skip > 0)
+    else if(P_dx != 0 or P_dy != 0) // okay, move success
     {
-        if(P_dx != 0 || P_dy != 0)
+        if(P_skip > 0)
         {
             out << "Movement interrupt.\n";
             P_skip = 0;
         }
-        else
-        {
-            P_skip--;
-            if(P_skip == 0)
-            {
-                out << "Done.\n";
-            }
-        }
-    }
-    else // okay, move success
-    {
         P.move(P_dx, P_dy);
         if(P_dx > 0) P.sprite().state = Sprite::FACING_EAST;
         else if(P_dx < 0) P.sprite().state = Sprite::FACING_WEST;
@@ -220,12 +210,22 @@ void Game::P_turn()
         out << "You are drowning!\n";
         P.addHP(-1);
     }
+    
+    if(P_skip > 0)
+    {
+        P_skip--;
+        if(P_skip == 0)
+        {
+            out << "Done.\n";
+        }
+    }
 
     while(tick()); // Handle all non-player entities
 
     if(P.getHP() <= 0) // Handle death
     {
         out << "You have died.\n\nThe Great Wind carries your spirit to the middle of the world, where it reassociates with a physical body.\n\nBe more cautious in your journeys!\n";
+        P_skip = 0;
         P.death();
         P.setPosition(50, 50);
     }
@@ -292,9 +292,10 @@ int Game::main_loop()
         while (SDL_PollEvent(&event))
         {
             handle_event(event);
-            calc_move();
-            if(getState() == Game::GS_QUIT) loop = false;
+            if(getState() == GS_QUIT) loop = false;
         }
+        
+        calc_move();
 
         if(SDL_GetTicks() - P_lastmove > 100 and move_req())
         {
