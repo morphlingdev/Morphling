@@ -11,13 +11,12 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P.setMaxHP(100);
     P.setHP(100);
     P.setPosition(50, 50); // Consistent with death (instead of (20,20))
-    P_sprite = Display::SPRITE_TAR_IMP;
-    P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+    P.setSprite(Sprite(Sprite::TAR_IMP, Sprite::FACING_SOUTH));
     P_dx = 0;
     P_dy = 0;
     P_movespeed = 100;
     P_skip = 0;
-    keys_down.down_arrow = keys_down.up_arrow = keys_down.left_arrow = keys_down.right_arrow = false;
+    keys_down = SDL_GetKeyState(NULL);
     entering_text = false;
 
     // initialize map with delicious perlin noise, regenerating when map is inadequate
@@ -40,6 +39,22 @@ void Game::handle_command(std::string cmd)
     if(cmd.compare("suicide") == 0)
     {
         P.setHP(0);
+    }
+    else if(cmd.compare("n") == 0)
+    {
+        P.move(0, -1);
+    }
+    else if(cmd.compare("s") == 0)
+    {
+        P.move(0, 1);
+    }
+    else if(cmd.compare("e") == 0)
+    {
+        P.move(1, 0);
+    }
+    else if(cmd.compare("w") == 0)
+    {
+        P.move(-1, 0);
     }
     else if(cmd.compare("blink") == 0)
     {
@@ -104,18 +119,6 @@ void Game::handle_event(SDL_Event &event)
             {
                 switch (event.key.keysym.sym)
                 {
-                case SDLK_UP:
-                    keys_down.up_arrow = true;
-                    break;
-                case SDLK_RIGHT:
-                    keys_down.right_arrow = true;
-                    break;
-                case SDLK_DOWN:
-                    keys_down.down_arrow = true;
-                    break;
-                case SDLK_LEFT:
-                    keys_down.left_arrow = true;
-                    break;
                 case SDLK_SPACE: // generate a new map
                     P.setPosition(50,50); // so that when the player dies he does not appear on a "bad" tile; also for consistency
                     do
@@ -148,18 +151,6 @@ void Game::handle_event(SDL_Event &event)
         case SDL_KEYUP:
             switch (event.key.keysym.sym)
             {
-            case SDLK_UP:
-                keys_down.up_arrow = false;
-                break;
-            case SDLK_RIGHT:
-                keys_down.right_arrow = false;
-                break;
-            case SDLK_DOWN:
-                keys_down.down_arrow = false;
-                break;
-            case SDLK_LEFT:
-                keys_down.left_arrow = false;
-                break;
             default:
                 break;
             }
@@ -177,9 +168,14 @@ void Game::handle_event(SDL_Event &event)
 
 bool Game::tick()
 {
-    num_ticks++;
+    tick_count++;
     bool mv = false;
     return mv;
+}
+
+void Game::simulate(int num_ticks)
+{
+    
 }
 
 void Game::P_turn()
@@ -211,10 +207,10 @@ void Game::P_turn()
     else // okay, move success
     {
         P.move(P_dx, P_dy);
-        if(P_dx > 0) P_spritestate = Display::SPRITE_STATE_FACING_EAST;
-        else if(P_dx < 0) P_spritestate = Display::SPRITE_STATE_FACING_WEST;
-        else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
-        else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+        if(P_dx > 0) P.sprite().state = Sprite::FACING_EAST;
+        else if(P_dx < 0) P.sprite().state = Sprite::FACING_WEST;
+        else if(P_dy < 0) P.sprite().state = Sprite::FACING_NORTH;
+        else P.sprite().state = Sprite::FACING_SOUTH;
     }
 
     t = M.tileAt(P.getX(), P.getY())->getAppearance();
@@ -241,7 +237,7 @@ void Game::redraw()
     dsp.draw_map(0, 0, &M, P.getX()-12, P.getY()-12, 25, 25);
 
     // player's sprite
-    dsp.draw_sprite(12*24, 12*24, P_sprite, P_spritestate);
+    dsp.draw_sprite(12*24, 12*24, P.getSprite());
 
     // message log
     out.draw_to(&dsp);
@@ -268,8 +264,8 @@ void Game::redraw()
 
 void Game::calc_move()
 {
-    P_dx = int(keys_down.right_arrow) - int(keys_down.left_arrow);
-    P_dy = int(keys_down.down_arrow) - int(keys_down.up_arrow);
+    P_dx = int(keys_down[SDLK_RIGHT]) - int(keys_down[SDLK_LEFT]);
+    P_dy = int(keys_down[SDLK_DOWN]) - int(keys_down[SDLK_UP]);
     return;
 }
 

@@ -17,6 +17,7 @@
 #include "Ability.h"
 #include "Entity.h"
 #include "MessageLog.h"
+#include "Sprite.h"
 
 #define TOTALWIDTH 1024
 #define TOTALHEIGHT 768
@@ -26,9 +27,8 @@ class Game
 private:
     Map M;
     Player P; // the player's own entity
-    Display::Sprite P_sprite;
-    Display::SpriteState P_spritestate;
-    int num_ticks;
+    std::vector<Entity> E; // let's make this work
+    int tick_count;
     int P_dx;
     int P_dy;
     int P_lastmove;
@@ -37,13 +37,7 @@ private:
     Display dsp;
     MessageLog out;
     int state;
-    struct
-    {
-        bool up_arrow;
-        bool down_arrow;
-        bool right_arrow;
-        bool left_arrow;
-    } keys_down;
+    Uint8 *keys_down;
     bool entering_text;
     std::string entered_text;
 
@@ -62,6 +56,7 @@ public:
     void handle_command(std::string cmd);
     void handle_event(SDL_Event &evt);
     bool tick();
+    void simulate(int num_ticks);
     void P_turn();
     void redraw();
     int getState();
