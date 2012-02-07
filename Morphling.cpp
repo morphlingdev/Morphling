@@ -41,6 +41,22 @@ void Game::handle_command(std::string cmd)
     {
         P.setHP(0);
     }
+    else if(cmd.compare("n") == 0)
+    {
+        P.move(0, -1);
+    }
+    else if(cmd.compare("s") == 0)
+    {
+        P.move(0, 1);
+    }
+    else if(cmd.compare("e") == 0)
+    {
+        P.move(1, 0);
+    }
+    else if(cmd.compare("w") == 0)
+    {
+        P.move(-1, 0);
+    }
     else if(cmd.compare("blink") == 0)
     {
         P.move(rand()%7-3, rand()%7-3);
