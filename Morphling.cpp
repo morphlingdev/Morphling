@@ -1,4 +1,5 @@
 #include "Morphling.h"
+#include <cctype>
 
 Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
 {
@@ -36,6 +37,11 @@ int Game::getState()
 
 void Game::handle_command(std::string cmd)
 {
+    std::string original = cmd;
+    for(int n = 0; n < cmd.length(); n++)
+    {
+        cmd[n] = tolower(cmd[n]);
+    }
     if(cmd.compare("suicide") == 0)
     {
         P.setHP(0);
@@ -73,7 +79,7 @@ void Game::handle_command(std::string cmd)
     }
     else if(cmd.length() > 0)
     {
-        out << cmd.append(" is an unrecognized command.\nType 'help' for a list of commands.\n");
+        out << original.append(" is an unrecognized command.\nType 'help' for a list of commands.\n"); // Quote the text plz!
     }
     return;
 }
@@ -205,11 +211,6 @@ void Game::P_turn()
 
     t = M.tileAt(P.getX(), P.getY())->getAppearance();
 
-    if(t == Tile::IMG_DEEPWATER)
-    {
-        out << "You are drowning!\n";
-        P.addHP(-1);
-    }
     
     if(P_skip > 0)
     {
