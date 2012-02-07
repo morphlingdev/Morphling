@@ -17,6 +17,7 @@
 #include "Ability.h"
 #include "Entity.h"
 #include "MessageLog.h"
+#include "Sprite.h"
 
 #define TOTALWIDTH 1024
 #define TOTALHEIGHT 768
@@ -26,8 +27,7 @@ class Game
 private:
     Map M;
     Player P; // the player's own entity
-    Display::Sprite P_sprite;
-    Display::SpriteState P_spritestate;
+    std::vector<Entity> E; // let's make this work
     int tick_count;
     int P_dx;
     int P_dy;

@@ -11,8 +11,7 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P.setMaxHP(100);
     P.setHP(100);
     P.setPosition(50, 50); // Consistent with death (instead of (20,20))
-    P_sprite = Display::SPRITE_TAR_IMP;
-    P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+    P.setSprite(Sprite(Sprite::TAR_IMP, Sprite::FACING_SOUTH));
     P_dx = 0;
     P_dy = 0;
     P_movespeed = 100;
@@ -232,10 +231,10 @@ void Game::P_turn()
     else // okay, move success
     {
         P.move(P_dx, P_dy);
-        if(P_dx > 0) P_spritestate = Display::SPRITE_STATE_FACING_EAST;
-        else if(P_dx < 0) P_spritestate = Display::SPRITE_STATE_FACING_WEST;
-        else if(P_dy < 0) P_spritestate = Display::SPRITE_STATE_FACING_NORTH;
-        else P_spritestate = Display::SPRITE_STATE_FACING_SOUTH;
+        if(P_dx > 0) P.sprite().state = Sprite::FACING_EAST;
+        else if(P_dx < 0) P.sprite().state = Sprite::FACING_WEST;
+        else if(P_dy < 0) P.sprite().state = Sprite::FACING_NORTH;
+        else P.sprite().state = Sprite::FACING_SOUTH;
     }
 
     t = M.tileAt(P.getX(), P.getY())->getAppearance();
@@ -262,7 +261,7 @@ void Game::redraw()
     dsp.draw_map(0, 0, &M, P.getX()-12, P.getY()-12, 25, 25);
 
     // player's sprite
-    dsp.draw_sprite(12*24, 12*24, P_sprite, P_spritestate);
+    dsp.draw_sprite(12*24, 12*24, P.getSprite());
 
     // message log
     out.draw_to(&dsp);

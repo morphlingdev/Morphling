@@ -146,13 +146,13 @@ int Display::draw_text_block(int x, int y, int w, std::string txt, FontType type
  */
 
 /* Draw a sprite, top left corner of pixel location at (x, y) */
-void Display::draw_sprite(int x, int y, Sprite sid, SpriteState sstate)
+void Display::draw_sprite(int x, int y, Sprite s)
 {
     SDL_Rect srcrect, dstrect;
     dstrect.x = x;
     dstrect.y = y;
-    srcrect.x = sstate*24;
-    srcrect.y = sid*24;
+    srcrect.x = s.state*24;
+    srcrect.y = s.image*24;
     srcrect.w = 24;
     srcrect.h = 24;
     SDL_BlitSurface(spritesheet, &srcrect, gScreen, &dstrect);
