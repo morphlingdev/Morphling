@@ -177,6 +177,16 @@ bool Game::tick()
 {
     tick_count++;
     bool mv = false;
+    
+    Tile::TileImgId t = M.tileAt(P.getX(), P.getY())->getAppearance();
+    if(t == Tile::IMG_DEEPWATER)
+    {
+        out << "You are drowning!\n";
+        P.addHP(-10);
+    }
+    
+    P.addHP(1);
+    
     return mv;
 }
 
@@ -208,8 +218,6 @@ void Game::P_turn()
         else if(P_dy < 0) P.sprite().state = Sprite::FACING_NORTH;
         else P.sprite().state = Sprite::FACING_SOUTH;
     }
-
-    t = M.tileAt(P.getX(), P.getY())->getAppearance();
 
     
     if(P_skip > 0)
