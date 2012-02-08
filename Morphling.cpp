@@ -1,5 +1,4 @@
 #include "Morphling.h"
-#include <cctype>
 
 Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
 {
@@ -182,7 +181,7 @@ bool Game::tick()
 
 void Game::simulate(int num_ticks)
 {
-    
+
 }
 
 void Game::P_turn()
@@ -211,7 +210,7 @@ void Game::P_turn()
 
     t = M.tileAt(P.getX(), P.getY())->getAppearance();
 
-    
+
     if(P_skip > 0)
     {
         P_skip--;
@@ -242,12 +241,12 @@ void Game::redraw()
 
     // message log
     out.draw_to(&dsp);
-    
+
     // entry bar
     if(entering_text)
     {
         dsp.fill_rect(610, 410, 300, 15, 48, 48, 32);
-        dsp.draw_text_line(610, 410, entered_text, Display::FONT_SMALL, 255, 255, 255); 
+        dsp.draw_text_line(610, 410, entered_text, Display::FONT_SMALL, 255, 255, 255);
     }
     else
     {
@@ -295,7 +294,7 @@ int Game::main_loop()
             handle_event(event);
             if(getState() == GS_QUIT) loop = false;
         }
-        
+
         calc_move();
 
         if(SDL_GetTicks() - P_lastmove > 100 and move_req())

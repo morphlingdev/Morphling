@@ -2,6 +2,8 @@
 #define MORPHLING_H
 
 #include <cstdlib>
+#include <cctype>
+#include <time.h>
 
 #if defined(_MSC_VER)
 #include "SDL.h"
