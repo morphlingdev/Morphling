@@ -76,6 +76,17 @@ void Game::handle_command(std::string cmd)
         out << "'suicide' sets your health to 0.\n";
         out << "'blink' teleports you up to 3 blocks away.\n";
         out << "'quit' exits Morphling.\n";
+        out << "'n' 'e' 'w' 's' - ";
+    }
+    else if(cmd.compare("spawn") == 0)
+    {
+        out << "You call a ritual, and the demons come.\n";
+        out << "Actually they don't, but they will soon.\n";
+        Creature e;
+        e.sprite().image = Sprite::SENTIENT_ARROW;
+        e.sprite().state = Sprite::FACING_SOUTH;
+        e.setPosition(rand()%20+1, rand()%20+1);
+        E.push_back(e);
     }
     else if(cmd.length() > 0)
     {
@@ -266,6 +277,11 @@ void Game::redraw()
     dsp.fill_rect(0, 605, 600, 20, 0, 0, 0);
     dsp.fill_rect(0, 605, P.getHP()*600/P.getMaxHP(), 20, 255, 0, 0);
     dsp.draw_rect(0, 605, 600, 20, 255, 255, 255);
+    
+    // creatures
+    for(int i=0;i<E.size();i++){
+        dsp.draw_sprite(12*24+(E[i].getX()-P.getX())*24, 12*24+(E[i].getY()-P.getY())*24, E[i].getSprite());
+    }
 
     // finally, put everything on the screen
     dsp.update();
