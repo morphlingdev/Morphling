@@ -66,7 +66,6 @@ public:
     void setSprite(Sprite a);
     std::list<Ability> getAbilities();
     std::list<Ability> setAbilities(std::list<Ability> value);
-	virtual void death() = 0; // abstract death function
 
     int getX();
     int getY();
@@ -101,7 +100,7 @@ protected:
 	std::list<Item> d; // drops
 public:
 	std::list<Item> getDrops();
-	std::list<Item> setDrops(std::list<Item> value);
+	std::list<Item> setDrops(std::list<Item> value);    
 	void death(Player P);
 	Creature();
 	~Creature();

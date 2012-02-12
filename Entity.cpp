@@ -70,7 +70,8 @@ int Entity::setHP(int value)
 
 int Entity::addHP(int value)
 {
-    hp += value;
+    if(hp > 0) hp += value;
+    if(hp > maxhp) hp = maxhp;
     return hp;
 }
 
