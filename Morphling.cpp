@@ -192,7 +192,7 @@ bool Game::tick()
     if(t == Tile::IMG_DEEPWATER)
     {
         out << "You are drowning!\n";
-        P.addHP(-10);
+        P.addHP(-5);
     }
     
     for(int i=0;i<E.size();i++)
@@ -201,6 +201,14 @@ bool Game::tick()
         {
             out << "The demon strikes you, draining your soul!\n";
             P.addHP(-12);
+        }
+        else{
+            int dx = P.getX() - E[i].getX();
+            int dy = P.getY() - E[i].getY();
+            if(dx > 0) E[i].move(1, 0);
+            else if(dx < 0) E[i].move(-1, 0);
+            if(dy > 0) E[i].move(0, 1);
+            else if(dy < 0) E[i].move(0, -1);
         }
     }
     
