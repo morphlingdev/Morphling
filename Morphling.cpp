@@ -195,6 +195,15 @@ bool Game::tick()
         P.addHP(-10);
     }
     
+    for(int i=0;i<E.size();i++)
+    {
+        if(P.mDistTo(E[i]) <= 1)
+        {
+            out << "The demon strikes you, draining your soul!\n";
+            P.addHP(-12);
+        }
+    }
+    
     P.addHP(1);
     
     return mv;

@@ -208,6 +208,18 @@ void Entity::move(int x, int y)
     this->y += y;
 }
 
+int Entity::mDistTo(Entity &E)
+{
+    return std::abs(this->x-E.x)+std::abs(this->y-E.y);
+}
+
+int Entity::eDistTo(Entity &E)
+{
+    int dx = std::abs(this->x-E.x);
+    int dy = std::abs(this->y-E.y);
+    return std::sqrt(dx*dx+dy*dy);
+}
+
 /*
  * Player
  */

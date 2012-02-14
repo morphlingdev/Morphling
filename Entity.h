@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <cmath>
 
 #include "Ability.h"
 #include "Item.h"
@@ -71,6 +72,8 @@ public:
     int getY();
     void setPosition(int x, int y);
     void move(int x, int y);
+    int mDistTo(Entity &E); // manhattan distance
+    int eDistTo(Entity &E); // euclidean distance
 };
 
 class Player : public Entity
