@@ -4,19 +4,8 @@
  * Entity
  */
 
-Entity::Entity()
-{
-    // Randomly generate creature type
-    //hp = maxhp = ;
-    //m = maxm = ;
-}
-
-Entity::~Entity()
-{
-    // Drop loot
-    // Player gains xp
-}
-
+Entity::Entity() {}
+Entity::~Entity() {}
 // Accessors and mutators
 std::string Entity::getName()
 {
@@ -29,12 +18,12 @@ std::string Entity::setName(std::string value)
     return name;
 }
 
-std::string Entity::getType()
+Entity::entityID Entity::getType()
 {
     return type;
 }
 
-std::string Entity::setType(std::string value)
+Entity::entityID Entity::setType(Entity::entityID value)
 {
     type = value;
     return type;
@@ -215,8 +204,8 @@ int Entity::mDistTo(Entity &E)
 
 int Entity::eDistTo(Entity &E)
 {
-    int dx = std::abs(this->x-E.x);
-    int dy = std::abs(this->y-E.y);
+    int dx = this->x-E.x;
+    int dy = this->y-E.y;
     return std::sqrt(dx*dx+dy*dy);
 }
 
@@ -307,13 +296,10 @@ void Player::level_up()
 
 Creature::Creature()
 {
-
+    flying = intelligent = false;
 }
 
-Creature::~Creature()
-{
-
-}
+Creature::~Creature() {}
 
 std::list<Item> Creature::getDrops()
 {
@@ -334,5 +320,15 @@ void Creature::death(Player P) // Goto here when creature dies
 	P.addXP(lvl * 10);
 	// remove the creature
 	return;
-}	
+}
+
+bool Creature::qFly()
+{
+    return flying;
+}
+
+bool Creature::qIntel()
+{
+    return intelligent;
+}
 
