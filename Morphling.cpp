@@ -12,6 +12,7 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P.setHP(100);
     P.setPosition(50, 50); // Consistent with death (instead of (20,20))
     P.setSprite(Sprite(Sprite::TAR_IMP, Sprite::FACING_SOUTH));
+    P.setType(Entity::PLAYER);
     P_dx = 0;
     P_dy = 0;
     P_movespeed = 100;
@@ -62,6 +63,22 @@ void Game::handle_command(std::string cmd)
     {
         P.move(-1, 0);
     }
+    else if(cmd.compare("ne") == 0)
+    {
+        P.move(1, -1);
+    }
+    else if(cmd.compare("nw") == 0)
+    {
+        P.move(-1, -1);
+    }
+    else if(cmd.compare("se") == 0)
+    {
+        P.move(1, 1);
+    }
+    else if(cmd.compare("sw") == 0)
+    {
+        P.move(-1, 1);
+    }
     else if(cmd.compare("blink") == 0)
     {
         P.move(rand()%7-3, rand()%7-3);
@@ -75,16 +92,37 @@ void Game::handle_command(std::string cmd)
         out << "'suicide' sets your health to 0.\n";
         out << "'blink' teleports you up to 3 blocks away.\n";
         out << "'quit' exits Morphling.\n";
-        out << "'n' 'e' 'w' 's' - ";
+        out << "'n' 'e' 'w' 's' 'ne' 'nw' 'se' 'sw' - ";
     }
     else if(cmd.compare("spawn") == 0)
     {
         out << "You call a ritual, and the demons come.\n";
         out << "Actually they don't, but they will soon.\n";
+        bool fail;
+        int randx,randy;
+        do // no one flies yet
+        {
+            fail = false;
+            randx = rand()%20+1;
+            randy = rand()%20+1;
+            if(M.tileAt(randx,randy)->getAppearance() == Tile::IMG_LAVA || M.tileAt(randx,randy)->getAppearance() == Tile::IMG_DEEPWATER || M.tileAt(randx,randy)->getAppearance() == Tile::IMG_MOUNTAIN)
+            {
+                fail = true;
+                continue;
+            }
+            for(int i = 0; i < E.size(); i++)
+            {
+                if(E[i].getX() == randx && E[i].getY() == randy)
+                {
+                    fail = true;
+                    break;
+                }
+            }
+        }
+        while(fail);
         Creature e;
-        e.sprite().image = Sprite::SENTIENT_ARROW;
-        e.sprite().state = Sprite::FACING_SOUTH;
-        e.setPosition(rand()%20+1, rand()%20+1);
+        e.setSprite(Sprite(Sprite::SENTIENT_ARROW,Sprite::FACING_SOUTH));
+        e.setPosition(randx,randy);
         E.push_back(e);
     }
     else if(cmd.length() > 0)
@@ -187,33 +225,164 @@ bool Game::tick()
 {
     tick_count++;
     bool mv = false;
-    
+
     Tile::TileImgId t = M.tileAt(P.getX(), P.getY())->getAppearance();
     if(t == Tile::IMG_DEEPWATER)
     {
         out << "You are drowning!\n";
         P.addHP(-5);
     }
-    
-    for(int i=0;i<E.size();i++)
+
+    for(int i=0; i<E.size(); i++) // since demons are retarted, no A*
     {
+        // add drowning
         if(P.mDistTo(E[i]) <= 1)
         {
             out << "The demon strikes you, draining your soul!\n";
             P.addHP(-12);
         }
-        else{
-            int dx = P.getX() - E[i].getX();
+        else // they don't fly yet
+        {
+            int dx = P.getX() - E[i].getX(); // do we need these?
             int dy = P.getY() - E[i].getY();
-            if(dx > 0) E[i].move(1, 0);
-            else if(dx < 0) E[i].move(-1, 0);
-            if(dy > 0) E[i].move(0, 1);
-            else if(dy < 0) E[i].move(0, -1);
+            int cx = E[i].getX(),cy = E[i].getY();
+            bool moved = false;
+            bool move,nonlinear = false;
+            int dirx,diry;
+            if(!E[i].qIntel())
+            {
+                if(dx && dy)
+                {
+                    move = true;
+                    nonlinear = true;
+                    dirx = (P.getX() > cx ? 1 : -1);
+                    diry = (P.getY() > cy ? 1 : -1);
+                    if(!E[i].qFly() && M.tileAt(cx+dirx,cy+diry)->getAppearance() == Tile::IMG_MOUNTAIN)
+                    {
+                        move = false;
+                    }
+                    if(move)
+                    {
+                        for(int j = 0; j < E.size(); j++)
+                        {
+                            if(i == j)
+                            {
+                                continue;
+                            }
+                            if(cx+dirx == E[j].getX() && cy+diry == E[j].getY())
+                            {
+                                move = false;
+                                break;
+                            }
+                        }
+                    }
+                    if(move)
+                    {
+                        E[i].move(dirx,diry);
+                        moved = true;
+                    }
+                }
+                if(!moved)
+                {
+                    bool move = true;
+                    if(nonlinear)
+                    {
+                        bool movex = true;
+                        if(std::sqrt((double(cx)+double(dirx)-double(P.getX()))*(double(cx)+double(dirx)-double(P.getX())) + (double(cy)-double(P.getY()))*(double(cy)-double(P.getY()))) >= std::sqrt((double(cx)-double(P.getX()))*(double(cx)-double(P.getX())) + (double(cy)+double(diry)-double(P.getY()))*(double(cy)+double(diry)-double(P.getY()))))
+                        {
+                            movex = false;
+                        }
+                        if(movex)
+                        {
+                            if(!E[i].qFly() && M.tileAt(cx+dirx,cy)->getAppearance() == Tile::IMG_MOUNTAIN)
+                            {
+                                move = false;
+                            }
+                            if(move)
+                            {
+                                for(int j = 0; j < E.size(); j++)
+                                {
+                                    if(i == j)
+                                    {
+                                        continue;
+                                    }
+                                    if(cx+dirx == E[j].getX() && cy == E[j].getY())
+                                    {
+                                        move = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(move)
+                            {
+                                E[i].move(dirx,0);
+                                moved = true;
+                            }
+                        }
+                        else
+                        {
+                            if(M.tileAt(cx,cy+diry)->getAppearance() == Tile::IMG_MOUNTAIN)
+                            {
+                                move = false;
+                            }
+                            if(move)
+                            {
+                                for(int j = 0; j < E.size(); j++)
+                                {
+                                    if(i == j)
+                                    {
+                                        continue;
+                                    }
+                                    if(cx == E[j].getX() && cy+diry == E[j].getY())
+                                    {
+                                        move = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(move)
+                            {
+                                E[i].move(dirx,0);
+                                moved = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        int dirx = (P.getX() > cx ? 1 : -1);
+                        int diry = (P.getY() > cy ? 1 : -1);
+                        if(!E[i].qFly() && M.tileAt(cx+dirx,cy+diry)->getAppearance() == Tile::IMG_MOUNTAIN)
+                        {
+                            move = false;
+                        }
+                        if(move)
+                        {
+                            for(int j = 0; j < E.size(); j++)
+                            {
+                                if(i == j)
+                                {
+                                    continue;
+                                }
+                                if(cx+dirx == E[j].getX() && cy+diry == E[j].getY())
+                                {
+                                    move = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if(move)
+                        {
+                            E[i].move(dirx,diry);
+                            moved = true;
+                        }
+                    }
+                }
+            }
         }
     }
-    
+
     P.addHP(1);
-    
+
     return mv;
 }
 
@@ -240,10 +409,10 @@ void Game::P_turn()
             P_skip = 0;
         }
         P.move(P_dx, P_dy);
-        if(P_dx > 0) P.sprite().state = Sprite::FACING_EAST;
-        else if(P_dx < 0) P.sprite().state = Sprite::FACING_WEST;
-        else if(P_dy < 0) P.sprite().state = Sprite::FACING_NORTH;
-        else P.sprite().state = Sprite::FACING_SOUTH;
+        if(P_dx > 0) P.sprite().setState(Sprite::FACING_EAST);
+        else if(P_dx < 0) P.sprite().setState(Sprite::FACING_WEST);
+        else if(P_dy < 0) P.sprite().setState(Sprite::FACING_NORTH);
+        else P.sprite().setState(Sprite::FACING_SOUTH);
     }
 
     t = M.tileAt(P.getX(), P.getY())->getAppearance();
@@ -294,9 +463,10 @@ void Game::redraw()
     dsp.fill_rect(0, 605, 600, 20, 0, 0, 0);
     dsp.fill_rect(0, 605, P.getHP()*600/P.getMaxHP(), 20, 255, 0, 0);
     dsp.draw_rect(0, 605, 600, 20, 255, 255, 255);
-    
+
     // creatures
-    for(int i=0;i<E.size();i++){
+    for(int i=0; i<E.size(); i++)
+    {
         dsp.draw_sprite(12*24+(E[i].getX()-P.getX())*24, 12*24+(E[i].getY()-P.getY())*24, E[i].getSprite());
     }
 
@@ -363,3 +533,7 @@ int main(int argc, char *argv[])
 
     return result;
 }
+
+
+
+

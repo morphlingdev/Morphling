@@ -12,9 +12,14 @@
 
 class Entity
 {
+public:
+    enum entityID
+    {
+        PLAYER, ARROW
+    };
 protected:
     std::string name;
-    std::string type;
+    entityID type;
 
     /* Basic attributes */
     int maxhp; // health
@@ -39,8 +44,8 @@ public:
     // Accessors and mutators
     std::string getName();
     std::string setName(std::string value);
-    std::string getType();
-    std::string setType(std::string value);
+    entityID getType();
+    entityID setType(entityID value);
     int getMaxHP();
     int setMaxHP(int value);
     int addMaxHP(int value);
@@ -62,7 +67,7 @@ public:
     int getLevel();
     int setLevel(int value);
     int addLevel(int value);
-    Sprite &sprite();
+    Sprite& sprite();
     Sprite getSprite();
     void setSprite(Sprite a);
     std::list<Ability> getAbilities();
@@ -84,9 +89,9 @@ class Player : public Entity
     int xp; // Experience
 public:
     Player();
-	~Player();
+    ~Player();
     std::list<Item> getItems();
-	std::list<Item> setItems(std::list<Item> value);
+    std::list<Item> setItems(std::list<Item> value);
     int getGold();
     int setGold(int value);
     int addGold(int value);
@@ -100,13 +105,17 @@ public:
 class Creature : public Entity
 {
 protected:
-	std::list<Item> d; // drops
+    std::list<Item> d; // drops
+    bool flying;
+    bool intelligent;
 public:
-	std::list<Item> getDrops();
-	std::list<Item> setDrops(std::list<Item> value);    
-	void death(Player P);
-	Creature();
-	~Creature();
+    std::list<Item> getDrops();
+    std::list<Item> setDrops(std::list<Item> value);
+    bool qFly();
+    bool qIntel();
+    void death(Player P);
+    Creature();
+    ~Creature();
 };
 
 #endif

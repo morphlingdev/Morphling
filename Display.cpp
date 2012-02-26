@@ -36,9 +36,9 @@ void Display::draw_line(int x1, int y1, int x2, int y2, int r, int g, int b)
     if(y1 < y2) sy = 1;
     else sy = -1;
     err = dx-dy;
-    
+
     if(SDL_MUSTLOCK(gScreen)) SDL_LockSurface(gScreen);
-    
+
     while(x1 != x2 or y1 != y2)
     {
         putpixel(x1, y1, r, g, b);
@@ -55,9 +55,9 @@ void Display::draw_line(int x1, int y1, int x2, int y2, int r, int g, int b)
         }
     }
     putpixel(x2, y2, r, g, b);
-    
+
     if(SDL_MUSTLOCK(gScreen)) SDL_UnlockSurface(gScreen);
-    
+
     return;
 }
 
@@ -116,7 +116,7 @@ int Display::draw_text_block(int x, int y, int w, std::string txt, FontType type
     TTF_SizeText(font[type], "a", &char_width, NULL);
     line_height = TTF_FontLineSkip(font[type]);
     chars_per_line = w/char_width;
-    
+
     line_count = 0;
     pos = 0;
     line_num = 0;
@@ -151,8 +151,8 @@ void Display::draw_sprite(int x, int y, Sprite s)
     SDL_Rect srcrect, dstrect;
     dstrect.x = x;
     dstrect.y = y;
-    srcrect.x = s.state*24;
-    srcrect.y = s.image*24;
+    srcrect.x = s.getState()*24;
+    srcrect.y = s.getImage()*24;
     srcrect.w = 24;
     srcrect.h = 24;
     SDL_BlitSurface(spritesheet, &srcrect, gScreen, &dstrect);

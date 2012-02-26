@@ -20,6 +20,7 @@
 #include "Entity.h"
 #include "MessageLog.h"
 #include "Sprite.h"
+#include <cmath>
 
 #define TOTALWIDTH 1024
 #define TOTALHEIGHT 768
@@ -29,7 +30,7 @@ class Game
 private:
     Map M;
     Player P; // the player's own entity
-    std::vector<Entity> E; // let's make this work
+    std::vector<Creature> E; // let's make this work
     int tick_count;
     int P_dx;
     int P_dy;
@@ -52,7 +53,7 @@ public:
 
     // constructor and destructor
     Game();
-    ~Game() {};
+    ~Game() {}
 
     // functions
     void handle_command(std::string cmd);
