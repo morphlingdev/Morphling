@@ -261,6 +261,10 @@ bool Game::tick()
                     {
                         move = false;
                     }
+                    if(cx+dirx == P.getX() && cy+diry == P.getY())
+                    {
+                        move = false;
+                    }
                     if(move)
                     {
                         for(int j = 0; j < E.size(); j++)
@@ -298,6 +302,10 @@ bool Game::tick()
                             {
                                 move = false;
                             }
+                            if(cx+dirx == P.getX() && cy == P.getY())
+                            {
+                                move = false;
+                            }
                             if(move)
                             {
                                 for(int j = 0; j < E.size(); j++)
@@ -325,6 +333,10 @@ bool Game::tick()
                             {
                                 move = false;
                             }
+                            if(cx == P.getX() && cy+diry == P.getY())
+                            {
+                                move = false;
+                            }
                             if(move)
                             {
                                 for(int j = 0; j < E.size(); j++)
@@ -342,16 +354,34 @@ bool Game::tick()
                             }
                             if(move)
                             {
-                                E[i].move(dirx,0);
+                                E[i].move(0,diry);
                                 moved = true;
                             }
                         }
                     }
                     else
                     {
-                        int dirx = (P.getX() > cx ? 1 : -1);
-                        int diry = (P.getY() > cy ? 1 : -1);
+                        if(!dx)
+                        {
+                            dirx = 0;
+                        }
+                        else
+                        {
+                            dirx = (P.getX() > cx ? 1 : -1);
+                        }
+                        if(!dy)
+                        {
+                            diry = 0;
+                        }
+                        else
+                        {
+                            diry = (P.getY() > cy ? 1 : -1);
+                        }
                         if(!E[i].qFly() && M.tileAt(cx+dirx,cy+diry)->getAppearance() == Tile::IMG_MOUNTAIN)
+                        {
+                            move = false;
+                        }
+                        if(cx+dirx == P.getX() && cy+diry == P.getY())
                         {
                             move = false;
                         }
