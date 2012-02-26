@@ -96,8 +96,8 @@ void Game::handle_command(std::string cmd)
     }
     else if(cmd.compare("spawn") == 0)
     {
-        out << "You call a ritual, and the demons come.\n";
-        out << "Actually they don't, but they will soon.\n";
+        out << "You call a ritual, and the deadly arrows come.\n";
+        out << "You are the knee.\n";
         bool fail;
         int randx,randy;
         do // no one flies yet
@@ -124,6 +124,11 @@ void Game::handle_command(std::string cmd)
         e.setSprite(Sprite(Sprite::SENTIENT_ARROW,Sprite::FACING_SOUTH));
         e.setPosition(randx,randy);
         E.push_back(e);
+    }
+    else if(cmd.compare("smite") == 0)
+    {
+        out << "You call upon the power of the light, and exterminate all the arrows of the land!\n";
+        E.clear();
     }
     else if(cmd.length() > 0)
     {
