@@ -3,7 +3,7 @@
 
 class Sprite
 {
-    public:
+public:
     enum Image
     {
         SENTIENT_ARROW,
@@ -16,22 +16,34 @@ class Sprite
         FACING_NORTH,
         FACING_WEST
     };
-    
+private:
     Image image;
     State state;
-    
-    Sprite()
+public:
+    Sprite(Image i = SENTIENT_ARROW, State s = FACING_SOUTH) : image(i),state(s) {}
+
+    Image getImage()
     {
-        image = SENTIENT_ARROW;
-        state = FACING_SOUTH;
+        return image;
     }
-    
-    Sprite(Image i, State s)
+
+    Image setImage(Image i = SENTIENT_ARROW)
     {
         image = i;
-        state = s;
+        return image;
     }
-    
+
+    State getState()
+    {
+        return state;
+    }
+
+    State setState(State s = FACING_SOUTH)
+    {
+        state = s;
+        return state;
+    }
+
     ~Sprite()
     {
     }
