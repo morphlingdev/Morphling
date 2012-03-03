@@ -92,7 +92,9 @@ void Game::handle_command(std::string cmd)
         out << "'suicide' sets your health to 0.\n";
         out << "'blink' teleports you up to 3 blocks away.\n";
         out << "'quit' exits Morphling.\n";
-        out << "'n' 'e' 'w' 's' 'ne' 'nw' 'se' 'sw' - ";
+        out << "'spawn' spawns a creature.\n";
+        out << "'smite' destroys all creatures.\n";
+        out << "'n' 'e' 'w' 's' 'ne' 'nw' 'se' 'sw' - \n";
     }
     else if(cmd.compare("spawn") == 0)
     {
@@ -103,8 +105,8 @@ void Game::handle_command(std::string cmd)
         do // no one flies yet
         {
             fail = false;
-            randx = rand()%20+1;
-            randy = rand()%20+1;
+            randx = rand()%100;
+            randy = rand()%100;
             if(M.tileAt(randx,randy)->getAppearance() == Tile::IMG_LAVA || M.tileAt(randx,randy)->getAppearance() == Tile::IMG_DEEPWATER || M.tileAt(randx,randy)->getAppearance() == Tile::IMG_MOUNTAIN)
             {
                 fail = true;
@@ -240,7 +242,10 @@ bool Game::tick()
 
     for(int i=0; i<E.size(); i++) // since demons are retarted, no A*
     {
-        // add drowning
+        //if(M.tileAt(E[i].getX(),E[i].getY())->getAppearance() == IMG_DEEPWATER)
+        //{
+        //    E[i].addHP(-5);
+        //}
         if(P.mDistTo(E[i]) <= 1)
         {
             out << "The demon strikes you, draining your soul!\n";
@@ -248,18 +253,17 @@ bool Game::tick()
         }
         else // they don't fly yet
         {
-            int dx = P.getX() - E[i].getX(); // do we need these?
+            int dx = P.getX() - E[i].getX();
             int dy = P.getY() - E[i].getY();
             int cx = E[i].getX(),cy = E[i].getY();
             bool moved = false;
-            bool move,nonlinear = false;
+            bool move;
             int dirx,diry;
             if(!E[i].qIntel())
             {
                 if(dx && dy)
                 {
                     move = true;
-                    nonlinear = true;
                     dirx = (P.getX() > cx ? 1 : -1);
                     diry = (P.getY() > cy ? 1 : -1);
                     if(!E[i].qFly() && M.tileAt(cx+dirx,cy+diry)->getAppearance() == Tile::IMG_MOUNTAIN)
@@ -294,10 +298,10 @@ bool Game::tick()
                 if(!moved)
                 {
                     bool move = true;
-                    if(nonlinear)
+                    if(dx && dy)
                     {
                         bool movex = true;
-                        if(std::sqrt((double(cx)+double(dirx)-double(P.getX()))*(double(cx)+double(dirx)-double(P.getX())) + (double(cy)-double(P.getY()))*(double(cy)-double(P.getY()))) >= std::sqrt((double(cx)-double(P.getX()))*(double(cx)-double(P.getX())) + (double(cy)+double(diry)-double(P.getY()))*(double(cy)+double(diry)-double(P.getY()))))
+                        if(abs(dx) >= abs(dy))
                         {
                             movex = false;
                         }
@@ -332,8 +336,9 @@ bool Game::tick()
                                 moved = true;
                             }
                         }
-                        else
+                        if(!moved)
                         {
+                            move = true;
                             if(M.tileAt(cx,cy+diry)->getAppearance() == Tile::IMG_MOUNTAIN)
                             {
                                 move = false;
@@ -360,6 +365,38 @@ bool Game::tick()
                             if(move)
                             {
                                 E[i].move(0,diry);
+                                moved = true;
+                            }
+                        }
+                        if(!moved)
+                        {
+                            move = true;
+                            if(!E[i].qFly() && M.tileAt(cx+dirx,cy)->getAppearance() == Tile::IMG_MOUNTAIN)
+                            {
+                                move = false;
+                            }
+                            if(cx+dirx == P.getX() && cy == P.getY())
+                            {
+                                move = false;
+                            }
+                            if(move)
+                            {
+                                for(int j = 0; j < E.size(); j++)
+                                {
+                                    if(i == j)
+                                    {
+                                        continue;
+                                    }
+                                    if(cx+dirx == E[j].getX() && cy == E[j].getY())
+                                    {
+                                        move = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(move)
+                            {
+                                E[i].move(dirx,0);
                                 moved = true;
                             }
                         }
@@ -423,7 +460,6 @@ bool Game::tick()
 
 void Game::simulate(int num_ticks)
 {
-
 }
 
 void Game::P_turn()
