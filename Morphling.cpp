@@ -87,12 +87,40 @@ void Game::handle_command(std::string cmd)
     {
         state = GS_QUIT;
     }
+    else if(cmd.compare("spawnfly") == 0)
+    {
+        out << "You call a ritual, and the deadly arrows come.\n";
+        out << "You are the knee.\n";
+        bool fail;
+        int randx,randy;
+        do // no one flies yet
+        {
+            fail = false;
+            randx = rand()%100;
+            randy = rand()%100;
+            for(int i = 0; i < E.size(); i++)
+            {
+                if(E[i].getX() == randx && E[i].getY() == randy)
+                {
+                    fail = true;
+                    break;
+                }
+            }
+        }
+        while(fail);
+        Creature e;
+        e.setFly(true);
+        e.setSprite(Sprite(Sprite::SENTIENT_ARROW,Sprite::FACING_SOUTH));
+        e.setPosition(randx,randy);
+        E.push_back(e);
+    }
     else if(cmd.compare("help") == 0)
     {
         out << "'suicide' sets your health to 0.\n";
         out << "'blink' teleports you up to 3 blocks away.\n";
         out << "'quit' exits Morphling.\n";
         out << "'spawn' spawns a creature.\n";
+        out << "'spawnfly' spawns a flying creature.\n";
         out << "'smite' destroys all creatures.\n";
         out << "'n' 'e' 'w' 's' 'ne' 'nw' 'se' 'sw' - \n";
     }

@@ -69,14 +69,14 @@ public:
     int addLevel(int value);
     Sprite& sprite();
     Sprite getSprite();
-    void setSprite(Sprite a);
+    Sprite setSprite(Sprite value);
     std::list<Ability> getAbilities();
     std::list<Ability> setAbilities(std::list<Ability> value);
 
     int getX();
     int getY();
-    void setPosition(int x, int y);
-    void move(int x, int y);
+    void setPosition(int a, int b);
+    void move(int a, int b);
     int mDistTo(Entity &E); // manhattan distance
     int eDistTo(Entity &E); // euclidean distance
 };
@@ -113,6 +113,8 @@ public:
     std::list<Item> setDrops(std::list<Item> value);
     bool qFly();
     bool qIntel();
+    bool setFly(bool value);
+    bool setIntel(bool value);
     void death(Player P);
     Creature();
     ~Creature();
