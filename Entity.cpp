@@ -158,10 +158,10 @@ Sprite Entity::getSprite()
     return appearance;
 }
 
-void Entity::setSprite(Sprite s)
+Sprite Entity::setSprite(Sprite value)
 {
-    appearance = s;
-    return;
+    appearance = value;
+    return value;
 }
 
 std::list<Ability> Entity::getAbilities()
@@ -185,27 +185,27 @@ int Entity::getY()
     return y;
 }
 
-void Entity::setPosition(int x, int y)
+void Entity::setPosition(int a, int b)
 {
-    this->x = x;
-    this->y = y;
+    x = a;
+    y = b;
 }
 
-void Entity::move(int x, int y)
+void Entity::move(int a, int b)
 {
-    this->x += x;
-    this->y += y;
+    x += a;
+    y += b;
 }
 
 int Entity::mDistTo(Entity &E)
 {
-    return std::abs(this->x-E.x)+std::abs(this->y-E.y);
+    return std::abs(x-E.x)+std::abs(y-E.y);
 }
 
 int Entity::eDistTo(Entity &E)
 {
-    int dx = this->x-E.x;
-    int dy = this->y-E.y;
+    int dx = x-E.x;
+    int dy = y-E.y;
     return std::sqrt(dx*dx+dy*dy);
 }
 
@@ -330,5 +330,17 @@ bool Creature::qFly()
 bool Creature::qIntel()
 {
     return intelligent;
+}
+
+bool Creature::setFly(bool value)
+{
+    flying = value;
+    return value;
+}
+
+bool Creature::setIntel(bool value)
+{
+    intelligent = value;
+    return value;
 }
 
