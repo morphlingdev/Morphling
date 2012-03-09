@@ -197,9 +197,14 @@ void Entity::move(int a, int b)
     y += b;
 }
 
+int Entity::mDistTo(int a, int b)
+{
+    return std::abs(x-a)+std::abs(y-b);
+}
+
 int Entity::mDistTo(Entity &E)
 {
-    return std::abs(x-E.x)+std::abs(y-E.y);
+    return mDistTo(E.getX(), E.getY());
 }
 
 int Entity::eDistTo(Entity &E)

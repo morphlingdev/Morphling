@@ -77,6 +77,7 @@ public:
     int getY();
     void setPosition(int a, int b);
     void move(int a, int b);
+    int mDistTo(int a, int b);
     int mDistTo(Entity &E); // manhattan distance
     int eDistTo(Entity &E); // euclidean distance
 };
