@@ -6,6 +6,32 @@ Tile* Map::tileAt(int x, int y)
     return &(t[x][y]);
 }
 
+bool Map::passable(int x, int y)
+{
+    if(t[x][y].getAppearance() == Tile::IMG_MOUNTAIN) return false;
+    return true;
+}
+
+bool Map::occupied(int x, int y)
+{
+    return false;
+}
+
+bool Map::safe(int x, int y)
+{
+    Tile::TileImgId i = t[x][y].getAppearance();
+    if(i==Tile::IMG_MOUNTAIN ||
+       i==Tile::IMG_DEEPWATER ||
+       i==Tile::IMG_WATER ||
+       i==Tile::IMG_LAVA) return false;
+    
+    return true;
+}
+
+Creature &Map::creatureAt(int x, int y){
+    /// TODO: Make this work
+}
+
 void Map::setup(int w, int h)
 {
     width = w;

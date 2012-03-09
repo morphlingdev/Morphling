@@ -30,7 +30,7 @@ class Game
 private:
     Map M;
     Player P; // the player's own entity
-    std::vector<Creature> E; // let's make this work
+    std::vector<Creature> E;
     int tick_count;
     int P_dx;
     int P_dy;
