@@ -3,6 +3,9 @@
 
 #include "Tile.h"
 #include "Perlin.h"
+#include "Entity.h"
+
+#include <vector>
 
 class Map
 {
@@ -12,6 +15,10 @@ private:
     Perlin elevation, rainfall;
 public:
     Tile* tileAt(int x, int y);
+    bool passable(int x, int y);
+    bool occupied(int x, int y);
+    bool safe(int x, int y);
+    Creature &creatureAt(int x, int y);
     int getWidth()
     {
         return width;

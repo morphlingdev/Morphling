@@ -25,8 +25,8 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     {
         M.generate_perlin();
     }
-    while(M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_WATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_DEEPWATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_MOUNTAIN || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_LAVA);
-
+    while(!M.safe(P.getX(), P.getY()));
+    
     redraw();
 }
 
@@ -268,7 +268,7 @@ bool Game::tick()
         P.addHP(-5);
     }
 
-    for(int i=0; i<E.size(); i++) // since demons are retarted, no A*
+    for(int i=0; i<E.size(); i++) // since demons are retarded, no A*
     {
         //if(M.tileAt(E[i].getX(),E[i].getY())->getAppearance() == IMG_DEEPWATER)
         //{
@@ -281,202 +281,37 @@ bool Game::tick()
         }
         else // they don't fly yet
         {
-            int dx = P.getX() - E[i].getX();
-            int dy = P.getY() - E[i].getY();
-            int cx = E[i].getX(),cy = E[i].getY();
-            bool moved = false;
-            bool move;
-            int dirx,diry;
+            int cx = E[i].getX(), cy = E[i].getY();
+            int dx = P.getX() - cx;
+            int dy = P.getY() - cy;
+            int min_dist = 99999;
+            int best_a, best_b;
+            int dirx, diry;
             if(!E[i].qIntel())
             {
-                if(dx && dy)
-                {
-                    move = true;
-                    dirx = (P.getX() > cx ? 1 : -1);
-                    diry = (P.getY() > cy ? 1 : -1);
-                    if(!E[i].qFly() && M.tileAt(cx+dirx,cy+diry)->getAppearance() == Tile::IMG_MOUNTAIN)
-                    {
-                        move = false;
-                    }
-                    if(cx+dirx == P.getX() && cy+diry == P.getY())
-                    {
-                        move = false;
-                    }
-                    if(move)
-                    {
-                        for(int j = 0; j < E.size(); j++)
-                        {
-                            if(i == j)
-                            {
-                                continue;
+                if(dx > 0) dirx = 1;
+                else if(dx < 0) dirx = -1;
+                else dirx = 0;
+                
+                if(dy > 0) diry = 1;
+                else if(dy < 0) diry = -1;
+                else diry = 0;
+                
+                for(int a=-1;a<=1;a++){
+                    for(int b=-1;b<=1;b++){
+                        if((a == dirx or a == 0) and (b == diry or b == 0)
+                        and (E[i].qFly() or M.passable(cx+a, cy+b))
+                        and !M.occupied(cx+a, cy+b)){
+                            int new_dist = P.mDistTo(cx+a, cy+b);
+                            if(new_dist < min_dist){
+                                min_dist = new_dist;
+                                best_a = a; best_b = b;
                             }
-                            if(cx+dirx == E[j].getX() && cy+diry == E[j].getY())
-                            {
-                                move = false;
-                                break;
-                            }
-                        }
-                    }
-                    if(move)
-                    {
-                        E[i].move(dirx,diry);
-                        moved = true;
-                    }
-                }
-                if(!moved)
-                {
-                    bool move = true;
-                    if(dx && dy)
-                    {
-                        bool movex = true;
-                        if(abs(dx) >= abs(dy))
-                        {
-                            movex = false;
-                        }
-                        if(movex)
-                        {
-                            if(!E[i].qFly() && M.tileAt(cx+dirx,cy)->getAppearance() == Tile::IMG_MOUNTAIN)
-                            {
-                                move = false;
-                            }
-                            if(cx+dirx == P.getX() && cy == P.getY())
-                            {
-                                move = false;
-                            }
-                            if(move)
-                            {
-                                for(int j = 0; j < E.size(); j++)
-                                {
-                                    if(i == j)
-                                    {
-                                        continue;
-                                    }
-                                    if(cx+dirx == E[j].getX() && cy == E[j].getY())
-                                    {
-                                        move = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if(move)
-                            {
-                                E[i].move(dirx,0);
-                                moved = true;
-                            }
-                        }
-                        if(!moved)
-                        {
-                            move = true;
-                            if(M.tileAt(cx,cy+diry)->getAppearance() == Tile::IMG_MOUNTAIN)
-                            {
-                                move = false;
-                            }
-                            if(cx == P.getX() && cy+diry == P.getY())
-                            {
-                                move = false;
-                            }
-                            if(move)
-                            {
-                                for(int j = 0; j < E.size(); j++)
-                                {
-                                    if(i == j)
-                                    {
-                                        continue;
-                                    }
-                                    if(cx == E[j].getX() && cy+diry == E[j].getY())
-                                    {
-                                        move = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if(move)
-                            {
-                                E[i].move(0,diry);
-                                moved = true;
-                            }
-                        }
-                        if(!moved)
-                        {
-                            move = true;
-                            if(!E[i].qFly() && M.tileAt(cx+dirx,cy)->getAppearance() == Tile::IMG_MOUNTAIN)
-                            {
-                                move = false;
-                            }
-                            if(cx+dirx == P.getX() && cy == P.getY())
-                            {
-                                move = false;
-                            }
-                            if(move)
-                            {
-                                for(int j = 0; j < E.size(); j++)
-                                {
-                                    if(i == j)
-                                    {
-                                        continue;
-                                    }
-                                    if(cx+dirx == E[j].getX() && cy == E[j].getY())
-                                    {
-                                        move = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if(move)
-                            {
-                                E[i].move(dirx,0);
-                                moved = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if(!dx)
-                        {
-                            dirx = 0;
-                        }
-                        else
-                        {
-                            dirx = (P.getX() > cx ? 1 : -1);
-                        }
-                        if(!dy)
-                        {
-                            diry = 0;
-                        }
-                        else
-                        {
-                            diry = (P.getY() > cy ? 1 : -1);
-                        }
-                        if(!E[i].qFly() && M.tileAt(cx+dirx,cy+diry)->getAppearance() == Tile::IMG_MOUNTAIN)
-                        {
-                            move = false;
-                        }
-                        if(cx+dirx == P.getX() && cy+diry == P.getY())
-                        {
-                            move = false;
-                        }
-                        if(move)
-                        {
-                            for(int j = 0; j < E.size(); j++)
-                            {
-                                if(i == j)
-                                {
-                                    continue;
-                                }
-                                if(cx+dirx == E[j].getX() && cy+diry == E[j].getY())
-                                {
-                                    move = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if(move)
-                        {
-                            E[i].move(dirx,diry);
-                            moved = true;
                         }
                     }
                 }
+                
+                E[i].move(best_a, best_b);
             }
         }
     }
@@ -494,11 +329,9 @@ void Game::P_turn()
 {
     Tile::TileImgId t; // the tile the player is about to move onto
 
-    t = M.tileAt(P.getX()+P_dx, P.getY()+P_dy)->getAppearance();
-
-    if(t == Tile::IMG_MOUNTAIN) // trying to move onto a mountain?
+    if(!M.passable(P.getX()+P_dx, P.getY()+P_dy)) // trying to move onto a mountain?
     {
-        out << "You are blocked by the mountains!\n";
+        out << "Blocked.\n";
     }
     else if(P_dx != 0 or P_dy != 0) // okay, move success
     {
