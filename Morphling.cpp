@@ -379,7 +379,9 @@ void Game::P_turn()
         out << "You have died.\n\nThe Great Wind carries your spirit to the middle of the world, where it reassociates with a physical body.\n\nBe more cautious in your journeys!\n";
         P_skip = 0;
         P.death();
+        M.tileAt(P.getX(), P.getY())->occupant = 0;
         P.setPosition(50, 50);
+        M.tileAt(P.getX(), P.getY())->occupant = &P;
     }
 }
 
@@ -479,7 +481,3 @@ int main(int argc, char *argv[])
 
     return result;
 }
-
-
-
-
