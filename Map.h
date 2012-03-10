@@ -18,7 +18,7 @@ public:
     bool passable(int x, int y);
     bool occupied(int x, int y);
     bool safe(int x, int y);
-    Creature &creatureAt(int x, int y);
+    Entity &entityAt(int x, int y);
     int getWidth()
     {
         return width;

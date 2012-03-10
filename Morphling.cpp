@@ -215,7 +215,7 @@ void Game::handle_event(SDL_Event &event)
                     {
                         M.generate_perlin();
                     }
-                    while(M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_WATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_DEEPWATER || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_MOUNTAIN || M.tileAt(P.getX(),P.getY())->getAppearance() == Tile::IMG_LAVA);
+                    while(!M.safe(P.getX(), P.getY()));
                     out << "New map generated.\n";
                     redraw();
                     break;
@@ -285,7 +285,7 @@ bool Game::tick()
             int dx = P.getX() - cx;
             int dy = P.getY() - cy;
             int min_dist = 99999;
-            int best_a, best_b;
+            int best_a=0, best_b=0;
             int dirx, diry;
             if(!E[i].qIntel())
             {
@@ -311,7 +311,9 @@ bool Game::tick()
                     }
                 }
                 
+                M.tileAt(E[i].getX(), E[i].getY())->occupant = NULL;
                 E[i].move(best_a, best_b);
+                M.tileAt(E[i].getX(), E[i].getY())->occupant = &E[i];
             }
         }
     }
@@ -340,11 +342,23 @@ void Game::P_turn()
             out << "Movement interrupt.\n";
             P_skip = 0;
         }
-        P.move(P_dx, P_dy);
-        if(P_dx > 0) P.sprite().setState(Sprite::FACING_EAST);
-        else if(P_dx < 0) P.sprite().setState(Sprite::FACING_WEST);
-        else if(P_dy < 0) P.sprite().setState(Sprite::FACING_NORTH);
-        else P.sprite().setState(Sprite::FACING_SOUTH);
+        
+        if(M.occupied(P.getX()+P_dx, P.getY()+P_dy)){
+            out << "You bump into the entity.\n";
+        }
+        else{
+            // HACKY: This is a really long and ugly way to move
+            // the player's reference in the map, and it doesn't work with
+            // the typed movement commands. Fix would be awesome
+            M.tileAt(P.getX(), P.getY())->occupant = NULL;
+            P.move(P_dx, P_dy);
+            M.tileAt(P.getX(), P.getY())->occupant = &P;
+            
+            if(P_dx > 0) P.sprite().setState(Sprite::FACING_EAST);
+            else if(P_dx < 0) P.sprite().setState(Sprite::FACING_WEST);
+            else if(P_dy < 0) P.sprite().setState(Sprite::FACING_NORTH);
+            else P.sprite().setState(Sprite::FACING_SOUTH);
+        }
     }
 
     t = M.tileAt(P.getX(), P.getY())->getAppearance();

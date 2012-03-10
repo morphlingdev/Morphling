@@ -1,6 +1,8 @@
 #ifndef TILE_H
 #define TILE_H
 
+#include "Entity.h"
+
 class Tile
 {
 public:
@@ -13,7 +15,7 @@ public:
 private:
     TileImgId appearance;
 public:
-
+    Entity *occupant;
     TileImgId getAppearance()
     {
         return appearance;
@@ -24,6 +26,7 @@ public:
     }
     Tile(TileImgId appearance=IMG_GRASS)
     {
+        occupant = NULL;
         setAppearance(appearance);
     }
 };

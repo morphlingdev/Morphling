@@ -9,6 +9,9 @@ EXECUTABLE=Morphling
 
 all: $(SOURCES) $(EXECUTABLE)
 
+debug: CFLAGS += -DDEBUG -g
+debug: $(SOURCES) $(EXECUTABLE)
+
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 

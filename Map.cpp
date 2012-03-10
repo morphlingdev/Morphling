@@ -14,7 +14,8 @@ bool Map::passable(int x, int y)
 
 bool Map::occupied(int x, int y)
 {
-    return false;
+    if(t[x][y].occupant == NULL) return false;
+    else return true;
 }
 
 bool Map::safe(int x, int y)
@@ -28,8 +29,8 @@ bool Map::safe(int x, int y)
     return true;
 }
 
-Creature &Map::creatureAt(int x, int y){
-    /// TODO: Make this work
+Entity &Map::entityAt(int x, int y){
+    return *t[x][y].occupant;
 }
 
 void Map::setup(int w, int h)
