@@ -261,7 +261,7 @@ bool Game::simulate_tick()
 
     for(int i=0; i<E.size(); i++)
     {
-        if(M.tileAt(E[i].getX(),E[i].getY())->getAppearance() == Tile::IMG_DEEPWATER)
+        if(!E[i].qFly() && M.tileAt(E[i].getX(),E[i].getY())->getAppearance() == Tile::IMG_DEEPWATER)
         {
             E[i].addHP(-5);
         }
