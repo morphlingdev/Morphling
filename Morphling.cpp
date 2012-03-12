@@ -27,8 +27,10 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     {
         M.generate_perlin();
     }
-    while(!M.safe(P.getX(), P.getY()));
-    
+    while(!M.safe(P.getX(), P.getY()) || !M.passable(P.getX(), P.getY()));
+
+    M.tileAt(P.getX(), P.getY())->occupant = &P;
+
     redraw();
 }
 
@@ -107,7 +109,14 @@ void Game::handle_command(std::string cmd)
     {
         P_dx=0;
         P_dy=0;
-        P.setPosition(rand()%100, rand()%100);
+        int randx, randy;
+        do
+        {
+            randx = rand()%100;
+            randy = rand()%100;
+        }
+        while(!M.passable(randx,randy) || M.occupied(randx,randy));
+        P.setPosition(randx,randy);
         P_turn();
     }
     else if(cmd.compare("quit") == 0)
@@ -120,8 +129,8 @@ void Game::handle_command(std::string cmd)
         out << "'blink' teleports you up to 3 blocks away.\n";
         out << "'quit' exits Morphling.\n";
         out << "'spawn' spawns a creature.\n";
-        out << "'spawnfly' spawns a flying creature.\n";
         out << "'smite' destroys all creatures.\n";
+        out << "'teleport' teleports you to a random passable and unoccupied tile.\n";
         out << "'n' 'e' 'w' 's' 'ne' 'nw' 'se' 'sw' - \n";
     }
     else if(cmd.compare(0, 5, "spawn") == 0)
@@ -261,7 +270,7 @@ bool Game::simulate_tick()
 
     for(int i=0; i<E.size(); i++)
     {
-        if(!E[i].qFly() && M.tileAt(E[i].getX(),E[i].getY())->getAppearance() == Tile::IMG_DEEPWATER)
+        if(!E[i].qFly() && !M.safe(E[i].getX(),E[i].getY()))
         {
             E[i].addHP(-5);
         }
@@ -287,11 +296,11 @@ bool Game::simulate_tick()
                 if(dx > 0) dirx = 1;
                 else if(dx < 0) dirx = -1;
                 else dirx = 0;
-                
+
                 if(dy > 0) diry = 1;
                 else if(dy < 0) diry = -1;
                 else diry = 0;
-                
+
                 for(int a=-1;a<=1;a++){
                     for(int b=-1;b<=1;b++){
                         if((a == dirx or a == 0) and (b == diry or b == 0)
@@ -305,16 +314,16 @@ bool Game::simulate_tick()
                         }
                     }
                 }
-                
+
                 M.tileAt(E[i].getX(), E[i].getY())->occupant = NULL;
                 E[i].move(best_a, best_b);
                 M.tileAt(E[i].getX(), E[i].getY())->occupant = &E[i];
             }
-            
+
             E[i].nextMoveAt(tick_count+2);
         }
     }
-    
+
     if(P.getHP() <= 0) // Handle player death
     {
         out << "You have died.\n\nThe Great Wind carries your spirit to the middle of the world, where it reassociates with a physical body.\n\nBe more cautious in your journeys!\n";
@@ -343,7 +352,7 @@ void Game::P_turn()
             out << "Movement interrupt.\n";
             P_skip = 0;
         }
-        
+
         if(M.occupied(P.getX()+P_dx, P.getY()+P_dy)){
             out << "You bump into the entity.\n";
         }
@@ -351,7 +360,7 @@ void Game::P_turn()
             M.tileAt(P.getX(), P.getY())->occupant = NULL;
             P.move(P_dx, P_dy);
             M.tileAt(P.getX(), P.getY())->occupant = &P;
-            
+
             if(P_dx > 0) P.sprite().setState(Sprite::FACING_EAST);
             else if(P_dx < 0) P.sprite().setState(Sprite::FACING_WEST);
             else if(P_dy < 0) P.sprite().setState(Sprite::FACING_NORTH);

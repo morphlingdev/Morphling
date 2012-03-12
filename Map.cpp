@@ -21,11 +21,8 @@ bool Map::occupied(int x, int y)
 bool Map::safe(int x, int y)
 {
     Tile::TileImgId i = t[x][y].getAppearance();
-    if(i==Tile::IMG_MOUNTAIN ||
-       i==Tile::IMG_DEEPWATER ||
-       i==Tile::IMG_WATER ||
-       i==Tile::IMG_LAVA) return false;
-    
+    if(i==Tile::IMG_DEEPWATER || i==Tile::IMG_LAVA) return false;
+
     return true;
 }
 
