@@ -9,7 +9,7 @@ EXECUTABLE=Morphling
 
 all: $(SOURCES) $(EXECUTABLE)
 
-debug: CFLAGS += -DDEBUG -g
+debug: CFLAGS += -Wunused -DDEBUG -g
 debug: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)

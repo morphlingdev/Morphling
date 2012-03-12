@@ -35,6 +35,9 @@ protected:
     int x;
     int y;
 
+    /* Time information */
+    int nextmove; // Game tick at which the entity will make their next move
+
     // abilities
     std::list<Ability> a;
 public:
@@ -80,6 +83,9 @@ public:
     int mDistTo(int a, int b);
     int mDistTo(Entity &E); // manhattan distance
     int eDistTo(Entity &E); // euclidean distance
+    
+    int whenNextMove();
+    int nextMoveAt(int value);
 };
 
 class Player : public Entity
