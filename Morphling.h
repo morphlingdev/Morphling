@@ -34,7 +34,7 @@ private:
     int tick_count;
     int P_dx;
     int P_dy;
-    int P_lastmove;
+    int P_nextmove; // tick at which player will next move
     int P_movespeed;
     int P_skip;
     Display dsp;
@@ -58,8 +58,7 @@ public:
     // functions
     void handle_command(std::string cmd);
     void handle_event(SDL_Event &evt);
-    bool tick();
-    void simulate(int num_ticks);
+    bool simulate_tick();
     void P_turn();
     void redraw();
     int getState();

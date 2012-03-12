@@ -214,6 +214,15 @@ int Entity::eDistTo(Entity &E)
     return std::sqrt(dx*dx+dy*dy);
 }
 
+int Entity::whenNextMove()
+{
+    return nextmove;
+}
+int Entity::nextMoveAt(int value)
+{
+    nextmove = value;
+}
+
 /*
  * Player
  */
