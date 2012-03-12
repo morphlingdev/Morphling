@@ -16,6 +16,8 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     P_dx = 0;
     P_dy = 0;
     P_movespeed = 100;
+    P_nextmove = 0;
+    tick_count = 0;
     P_skip = 0;
     keys_down = SDL_GetKeyState(NULL);
     entering_text = false;
@@ -49,70 +51,68 @@ void Game::handle_command(std::string cmd)
     }
     else if(cmd.compare("n") == 0)
     {
-        P.move(0, -1);
+        P_dx=0;
+        P_dy=-1;
+        P_turn();
     }
     else if(cmd.compare("s") == 0)
     {
-        P.move(0, 1);
+        P_dx=0;
+        P_dy=1;
+        P_turn();
     }
     else if(cmd.compare("e") == 0)
     {
-        P.move(1, 0);
+        P_dx=1;
+        P_dy=0;
+        P_turn();
     }
     else if(cmd.compare("w") == 0)
     {
-        P.move(-1, 0);
+        P_dx=-1;
+        P_dy=0;
+        P_turn();
     }
     else if(cmd.compare("ne") == 0)
     {
-        P.move(1, -1);
+        P_dx=1;
+        P_dy=-1;
+        P_turn();
     }
     else if(cmd.compare("nw") == 0)
     {
-        P.move(-1, -1);
+        P_dx=-1;
+        P_dy=-1;
+        P_turn();
     }
     else if(cmd.compare("se") == 0)
     {
-        P.move(1, 1);
+        P_dx=1;
+        P_dy=1;
+        P_turn();
     }
     else if(cmd.compare("sw") == 0)
     {
-        P.move(-1, 1);
+        P_dx=-1;
+        P_dy=1;
+        P_turn();
     }
     else if(cmd.compare("blink") == 0)
     {
-        P.move(rand()%7-3, rand()%7-3);
+        P_dx=rand()%7-3;
+        P_dy=rand()%7-3;
+        P_turn();
+    }
+    else if(cmd.compare("teleport") == 0)
+    {
+        P_dx=0;
+        P_dy=0;
+        P.setPosition(rand()%100, rand()%100);
+        P_turn();
     }
     else if(cmd.compare("quit") == 0)
     {
         state = GS_QUIT;
-    }
-    else if(cmd.compare("spawnfly") == 0)
-    {
-        out << "You call a ritual, and the deadly arrows come.\n";
-        out << "You are the knee.\n";
-        bool fail;
-        int randx,randy;
-        do // no one flies yet
-        {
-            fail = false;
-            randx = rand()%100;
-            randy = rand()%100;
-            for(int i = 0; i < E.size(); i++)
-            {
-                if(E[i].getX() == randx && E[i].getY() == randy)
-                {
-                    fail = true;
-                    break;
-                }
-            }
-        }
-        while(fail);
-        Creature e;
-        e.setFly(true);
-        e.setSprite(Sprite(Sprite::SENTIENT_ARROW,Sprite::FACING_SOUTH));
-        e.setPosition(randx,randy);
-        E.push_back(e);
     }
     else if(cmd.compare("help") == 0)
     {
@@ -124,35 +124,27 @@ void Game::handle_command(std::string cmd)
         out << "'smite' destroys all creatures.\n";
         out << "'n' 'e' 'w' 's' 'ne' 'nw' 'se' 'sw' - \n";
     }
-    else if(cmd.compare("spawn") == 0)
+    else if(cmd.compare(0, 5, "spawn") == 0)
     {
         out << "You call a ritual, and the deadly arrows come.\n";
         out << "You are the knee.\n";
-        bool fail;
+        bool flying = false;
+        if(cmd.length() > 8 and cmd.compare(6, 3, "fly") == 0) flying = true;
         int randx,randy;
-        do // no one flies yet
+        do
         {
-            fail = false;
             randx = rand()%100;
             randy = rand()%100;
-            if(M.tileAt(randx,randy)->getAppearance() == Tile::IMG_LAVA || M.tileAt(randx,randy)->getAppearance() == Tile::IMG_DEEPWATER || M.tileAt(randx,randy)->getAppearance() == Tile::IMG_MOUNTAIN)
-            {
-                fail = true;
-                continue;
-            }
-            for(int i = 0; i < E.size(); i++)
-            {
-                if(E[i].getX() == randx && E[i].getY() == randy)
-                {
-                    fail = true;
-                    break;
-                }
-            }
         }
-        while(fail);
+        while(
+            ((!M.passable(randx, randy) or !M.safe(randx, randy)) and !flying)
+            or M.occupied(randx, randy));
         Creature e;
+        if(flying) e.setFly(true);
         e.setSprite(Sprite(Sprite::SENTIENT_ARROW,Sprite::FACING_SOUTH));
         e.setPosition(randx,randy);
+        e.setMaxHP(30);
+        e.setHP(30);
         E.push_back(e);
     }
     else if(cmd.compare("smite") == 0)
@@ -162,7 +154,7 @@ void Game::handle_command(std::string cmd)
     }
     else if(cmd.length() > 0)
     {
-        out << original.append(" is an unrecognized command.\nType 'help' for a list of commands.\n"); // Quote the text plz!
+        out << std::string("\"").append(original.append("\" is an unrecognized command.\nType 'help' for a list of commands.\n"));
     }
     return;
 }
@@ -256,9 +248,8 @@ void Game::handle_event(SDL_Event &event)
     return;
 }
 
-bool Game::tick()
+bool Game::simulate_tick()
 {
-    tick_count++;
     bool mv = false;
 
     Tile::TileImgId t = M.tileAt(P.getX(), P.getY())->getAppearance();
@@ -268,18 +259,22 @@ bool Game::tick()
         P.addHP(-5);
     }
 
-    for(int i=0; i<E.size(); i++) // since demons are retarded, no A*
+    for(int i=0; i<E.size(); i++)
     {
-        //if(M.tileAt(E[i].getX(),E[i].getY())->getAppearance() == IMG_DEEPWATER)
-        //{
-        //    E[i].addHP(-5);
-        //}
+        if(M.tileAt(E[i].getX(),E[i].getY())->getAppearance() == Tile::IMG_DEEPWATER)
+        {
+            E[i].addHP(-5);
+        }
         if(P.mDistTo(E[i]) <= 1)
         {
             out << "The demon strikes you, draining your soul!\n";
             P.addHP(-12);
         }
-        else // they don't fly yet
+        if(E[i].getHP() <= 0)
+        {
+            E.erase(E.begin()+i);
+        }
+        else if(tick_count >= E[i].whenNextMove()) // do movement
         {
             int cx = E[i].getX(), cy = E[i].getY();
             int dx = P.getX() - cx;
@@ -315,7 +310,19 @@ bool Game::tick()
                 E[i].move(best_a, best_b);
                 M.tileAt(E[i].getX(), E[i].getY())->occupant = &E[i];
             }
+            
+            E[i].nextMoveAt(tick_count+2);
         }
+    }
+    
+    if(P.getHP() <= 0) // Handle player death
+    {
+        out << "You have died.\n\nThe Great Wind carries your spirit to the middle of the world, where it reassociates with a physical body.\n\nBe more cautious in your journeys!\n";
+        P_skip = 0;
+        P.death();
+        M.tileAt(P.getX(), P.getY())->occupant = 0;
+        P.setPosition(50, 50);
+        M.tileAt(P.getX(), P.getY())->occupant = &P;
     }
 
     P.addHP(1);
@@ -323,14 +330,8 @@ bool Game::tick()
     return mv;
 }
 
-void Game::simulate(int num_ticks)
-{
-}
-
 void Game::P_turn()
 {
-    Tile::TileImgId t; // the tile the player is about to move onto
-
     if(!M.passable(P.getX()+P_dx, P.getY()+P_dy)) // trying to move onto a mountain?
     {
         out << "Blocked.\n";
@@ -347,9 +348,6 @@ void Game::P_turn()
             out << "You bump into the entity.\n";
         }
         else{
-            // HACKY: This is a really long and ugly way to move
-            // the player's reference in the map, and it doesn't work with
-            // the typed movement commands. Fix would be awesome
             M.tileAt(P.getX(), P.getY())->occupant = NULL;
             P.move(P_dx, P_dy);
             M.tileAt(P.getX(), P.getY())->occupant = &P;
@@ -361,8 +359,6 @@ void Game::P_turn()
         }
     }
 
-    t = M.tileAt(P.getX(), P.getY())->getAppearance();
-
     if(P_skip > 0)
     {
         P_skip--;
@@ -370,18 +366,6 @@ void Game::P_turn()
         {
             out << "Done.\n";
         }
-    }
-
-    while(tick()); // Handle all non-player entities
-
-    if(P.getHP() <= 0) // Handle death
-    {
-        out << "You have died.\n\nThe Great Wind carries your spirit to the middle of the world, where it reassociates with a physical body.\n\nBe more cautious in your journeys!\n";
-        P_skip = 0;
-        P.death();
-        M.tileAt(P.getX(), P.getY())->occupant = 0;
-        P.setPosition(50, 50);
-        M.tileAt(P.getX(), P.getY())->occupant = &P;
     }
 }
 
@@ -409,13 +393,16 @@ void Game::redraw()
 
     // health bar
     dsp.fill_rect(0, 605, 600, 20, 0, 0, 0);
-    dsp.fill_rect(0, 605, P.getHP()*600/P.getMaxHP(), 20, 255, 0, 0);
+    dsp.fill_rect(0, 605, std::max(P.getHP()*600/P.getMaxHP(), 0), 20, 255, 0, 0);
     dsp.draw_rect(0, 605, 600, 20, 255, 255, 255);
 
     // creatures
     for(int i=0; i<E.size(); i++)
     {
-        dsp.draw_sprite(12*24+(E[i].getX()-P.getX())*24, 12*24+(E[i].getY()-P.getY())*24, E[i].getSprite());
+        int x = 12*24+(E[i].getX()-P.getX())*24;
+        int y = 12*24+(E[i].getY()-P.getY())*24;
+        dsp.draw_sprite(x, y, E[i].getSprite());
+        dsp.fill_rect(x, y, E[i].getHP()*24/E[i].getMaxHP(), 1, 255, 0, 0);
     }
 
     // finally, put everything on the screen
@@ -449,6 +436,13 @@ int Game::main_loop()
     int P_lastmove;
     while(loop)
     {
+        while(tick_count < P_nextmove){
+            simulate_tick();
+            tick_count++;
+            redraw();
+            SDL_Delay(40);
+            while (SDL_PollEvent(&event));
+        }
         while (SDL_PollEvent(&event))
         {
             handle_event(event);
@@ -456,14 +450,14 @@ int Game::main_loop()
         }
 
         calc_move();
-
         if(SDL_GetTicks() - P_lastmove > 100 and move_req())
         {
             P_lastmove = SDL_GetTicks();
             P_turn();
             redraw();
+            P_nextmove = tick_count+1;
         }
-        SDL_Delay(1000.00/30.00); // 30 fps
+        SDL_Delay(1000.0/30.0); // 30 fps
     }
     return 0;
 }
