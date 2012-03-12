@@ -8,9 +8,12 @@ Game::Game() :  M(100, 100), dsp(1024, 768), out("log.txt")
     state = GS_GAME;
 
     // Set up player -- SHOULD BE WRITTEN IN DATA FILE LATER INSTEAD OF HARDCODED
+    map_w = 100;
+    map_h = 100;
+    
     P.setMaxHP(100);
     P.setHP(100);
-    P.setPosition(50, 50); // Consistent with death (instead of (20,20))
+    P.setPosition(map_w/2, map_h/2); // Consistent with death (instead of (20,20))
     P.setSprite(Sprite(Sprite::TAR_IMP, Sprite::FACING_SOUTH));
     P.setType(Entity::PLAYER);
     P_dx = 0;
@@ -107,7 +110,7 @@ void Game::handle_command(std::string cmd)
     {
         P_dx=0;
         P_dy=0;
-        P.setPosition(rand()%100, rand()%100);
+        P.setPosition(rand()%map_w, rand()%map_h);
         P_turn();
     }
     else if(cmd.compare("quit") == 0)
@@ -133,8 +136,8 @@ void Game::handle_command(std::string cmd)
         int randx,randy;
         do
         {
-            randx = rand()%100;
-            randy = rand()%100;
+            randx = rand()%map_w;
+            randy = rand()%map_h;
         }
         while(
             ((!M.passable(randx, randy) or !M.safe(randx, randy)) and !flying)
@@ -202,7 +205,7 @@ void Game::handle_event(SDL_Event &event)
                 switch (event.key.keysym.sym)
                 {
                 case SDLK_SPACE: // generate a new map
-                    P.setPosition(50,50); // so that when the player dies he does not appear on a "bad" tile; also for consistency
+                    P.setPosition(map_w/2,map_h/2);
                     do
                     {
                         M.generate_perlin();
@@ -372,8 +375,12 @@ void Game::P_turn()
 void Game::redraw()
 {
     // map
-    dsp.draw_map(0, 0, &M, P.getX()-12, P.getY()-12, 25, 25);
-
+    for(int i=-12;i<=12;i++){
+        for(int j=-12;j<=12;j++){
+            dsp.draw_tile((i+12)*24, (j+12)*24, M.tileAt((P.getX()+i+map_w)%map_w, (P.getY()+j+map_h)%map_h)->getAppearance());
+        }
+    }
+    
     // player's sprite
     dsp.draw_sprite(12*24, 12*24, P.getSprite());
 

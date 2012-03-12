@@ -44,6 +44,9 @@ private:
     bool entering_text;
     std::string entered_text;
 
+    int map_w;
+    int map_h;
+
 public:
     // game states
     enum GameState
