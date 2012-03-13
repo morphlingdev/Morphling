@@ -1,5 +1,3 @@
 *.o
-*.exe
 errors.txt
 log.txt
-

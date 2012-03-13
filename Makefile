@@ -1,8 +1,6 @@
-# Compiler to use
 CC=g++
-
-CFLAGS=-c -lSDL -lSDL_ttf
-LDFLAGS=-lSDL -lSDL_ttf -lSDL_image
+CFLAGS=-c `sdl-config --cflags`
+LDFLAGS=`sdl-config --libs` -lSDL_ttf -lSDL_image
 SOURCES=Morphling.cpp Display.cpp Ability.cpp Map.cpp Tile.cpp Entity.cpp MessageLog.cpp Item.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Morphling
@@ -13,10 +11,10 @@ debug: CFLAGS += -Wunused -DDEBUG -g
 debug: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(CC) $(OBJECTS) -o $@  $(LDFLAGS)
 
 .cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $< -o $@ $(CFLAGS)
 
 clean:
 	rm $(OBJECTS) $(EXECUTABLE)
