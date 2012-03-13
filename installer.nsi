@@ -1,11 +1,3 @@
-# This installs two files, app.exe and logo.ico, creates a start menu shortcut, builds an uninstaller, and
-# adds uninstall information to the registry for Add/Remove Programs
- 
-# To get started, put this script into a folder with the two files (app.exe, logo.ico, and license.rtf -
-# You'll have to create these yourself) and run makensis on it
- 
-# If you change the names "app.exe", "logo.ico", or "license.rtf" you should do a search and replace - they
-# show up in a few places.
 # All the other settings can be tweaked by editing the !defines at the top of this script
 !define APPNAME "Morphling"
 !define COMPANYNAME "MorphlingDev"
@@ -27,9 +19,6 @@ RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on
  
 InstallDir "$PROGRAMFILES\${APPNAME}"
  
-# rtf or txt file - remember if it is txt, it must be in the DOS text format (\r\n)
-LicenseData "license.rtf"
-# This will be in the installer/uninstaller's title bar
 Name "${APPNAME}"
 Icon "icon.ico"
 outFile "Morphling-Setup.exe"
