@@ -13,7 +13,7 @@ debug: CFLAGS += -Wunused -DDEBUG -g
 debug: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
+	$(CC) $(OBJECTS) Morphling.res -o $@ $(LDFLAGS)
 
 .cpp.o:
 	$(CC) $< -o $@ $(CFLAGS)

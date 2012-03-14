@@ -1,0 +1,25 @@
+id ICON "icon.ico"
+1 VERSIONINFO
+FILEVERSION     0,0,69,0
+PRODUCTVERSION  0,0,69,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "CompanyName", "MorphlingDev"
+      VALUE "FileDescription", "Morphling"
+      VALUE "FileVersion", "0.0.69"
+      VALUE "InternalName", "Morphling"
+      VALUE "LegalCopyright", "MorphlingDev Team"
+      VALUE "OriginalFilename", "Morphling.exe"
+      VALUE "ProductName", "Morphling"
+      VALUE "ProductVersion", "0.0.69"
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1252
+  END
+END

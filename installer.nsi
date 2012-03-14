@@ -16,6 +16,8 @@ Name "Morphling Installer"
 RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on)
  
 InstallDir "$PROGRAMFILES\${APPNAME}"
+
+LicenseData "License.rtf"
  
 Name "${APPNAME}"
 Icon "icon.ico"
@@ -53,7 +55,6 @@ section "install"
 SetOutPath "$INSTDIR"
 
 file "Morphling.exe"
-file "icon.ico"
 file "zlib1.dll"
 file "tiles.png"
 file "sprites.png"
@@ -75,8 +76,8 @@ writeUninstaller "$INSTDIR\uninstall.exe"
 
 createDirectory "$SMPROGRAMS\Morphling"
 
-CreateShortCut "$SMPROGRAMS\Morphling\Morphling.lnk" "$INSTDIR\morphling.exe" "" "$INSTDIR\icon.ico"
-CreateShortCut "$DESKTOP\Morphling.lnk" "$INSTDIR\morphling.exe" "" "$INSTDIR\icon.ico"
+CreateShortCut "$SMPROGRAMS\Morphling\Morphling.lnk" "$INSTDIR\morphling.exe" "" "$INSTDIR\Morphling.exe" 0
+CreateShortCut "$DESKTOP\Morphling.lnk" "$INSTDIR\morphling.exe" "" "$INSTDIR\Morphling.exe" 0
 
 # Registry information for add/remove programs
 WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayName" "${APPNAME}"
@@ -115,7 +116,6 @@ section "uninstall"
  
 	# Remove files
 	delete $INSTDIR\Morphling.exe
-	delete $INSTDIR\icon.ico
 	delete $INSTDIR\zlib1.dll
 	delete $INSTDIR\tiles.png
 	delete $INSTDIR\sprites.png
