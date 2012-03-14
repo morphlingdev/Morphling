@@ -1,6 +1,8 @@
+# Compiler to use
 CC=g++
-CFLAGS=-c `sdl-config --cflags`
-LDFLAGS=`sdl-config --libs` -lSDL_ttf -lSDL_image
+
+CFLAGS=-c -lSDL -lSDL_ttf
+LDFLAGS=-lmingw32 -lSDLmain -lSDL -lSDL_ttf -lSDL_image -mwindows
 SOURCES=Morphling.cpp Display.cpp Ability.cpp Map.cpp Tile.cpp Entity.cpp MessageLog.cpp Item.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Morphling

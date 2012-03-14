@@ -39,3 +39,6 @@ Since Morphling is currently in Alpha stage, it is constantly being updated. To 
 	$ make clean
 	$ make
 Then run Morphling.
+
+
+*UPDATE: An installer package is now available for the Windows platform. It is now possible to download it directly from the Github repository. However, cloning the repo and building the game yourself is still highly recommended given the constant need to update the game. By building it from source, you could also help us squash bugs :P.

@@ -2,6 +2,7 @@
 #define PERLIN_H
 
 #include <cmath>
+#include <cstdlib>
 
 #define X_NOISE_GEN 1619
 #define Y_NOISE_GEN 31337

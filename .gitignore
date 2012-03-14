@@ -1,3 +1,6 @@
 *.o
 errors.txt
 log.txt
+stderr.txt
+stdout.txt
+
