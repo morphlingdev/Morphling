@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include <cmath>
+#include <cstdlib>
 
 #include "Ability.h"
 #include "Item.h"
@@ -83,7 +84,7 @@ public:
     int mDistTo(int a, int b);
     int mDistTo(Entity &E); // manhattan distance
     int eDistTo(Entity &E); // euclidean distance
-    
+
     int whenNextMove();
     int nextMoveAt(int value);
 };

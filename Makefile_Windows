@@ -1,0 +1,22 @@
+# Compiler to use
+CC=g++
+
+CFLAGS=-c -lSDL -lSDL_ttf
+LDFLAGS=-lmingw32 -lSDLmain -lSDL -lSDL_ttf -lSDL_image -mwindows
+SOURCES=Morphling.cpp Display.cpp Ability.cpp Map.cpp Tile.cpp Entity.cpp MessageLog.cpp Item.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=Morphling
+
+all: $(SOURCES) $(EXECUTABLE)
+
+debug: CFLAGS += -Wunused -DDEBUG -g
+debug: $(SOURCES) $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
+
+.cpp.o:
+	$(CC) $< -o $@ $(CFLAGS)
+
+clean:
+	rm $(OBJECTS) $(EXECUTABLE)
