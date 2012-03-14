@@ -2,3 +2,5 @@ Morphling is a roguelike game with an emphasis on dynamic story, and dynamic cha
 
 For instructions on how to install Morphling, read INSTALL.
 For a list of contributors in this project, read AUTHORS.
+
+*UPDATE: An installer package is now available for the Windows platform. It is now possible to download it directly from the Github repository. However, cloning the repo and building the game yourself is still highly recommended given the constant need to update the game.
