@@ -115,6 +115,17 @@ int Entity::addStrength(int value)
     return str;
 }
 
+int Entity::getSpeed()
+{
+    return spd;
+}
+
+int Entity::setSpeed(int value)
+{
+    spd = value;
+    return spd;
+}
+
 int Entity::getArmor()
 {
     return armor;

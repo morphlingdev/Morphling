@@ -141,7 +141,9 @@ void Game::handle_command(std::string cmd)
         out << "You call a ritual, and the deadly arrows come.\n";
         out << "You are the knee.\n";
         bool flying = false;
+        bool quick = false;
         if(cmd.length() > 8 and cmd.compare(6, 3, "fly") == 0) flying = true;
+        if(cmd.length() > 8 and cmd.compare(6, 5, "quick") == 0) quick = true;
         int randx,randy;
         do
         {
@@ -153,10 +155,13 @@ void Game::handle_command(std::string cmd)
             or M.occupied(randx, randy));
         Creature e;
         if(flying) e.setFly(true);
+        if(quick) e.setSpeed(1);
+        else e.setSpeed(3);
         e.setSprite(Sprite(Sprite::SENTIENT_ARROW,Sprite::FACING_SOUTH));
         e.setPosition(randx,randy);
         e.setMaxHP(30);
         e.setHP(30);
+        e.nextMoveAt(tick_count+e.getSpeed());
         E.push_back(e);
     }
     else if(cmd.compare("smite") == 0)
@@ -323,7 +328,7 @@ bool Game::simulate_tick()
                 M.tileAt(E[i].getX(), E[i].getY())->occupant = &E[i];
             }
 
-            E[i].nextMoveAt(tick_count+2);
+            E[i].nextMoveAt(tick_count+E[i].getSpeed());
         }
     }
 
@@ -471,7 +476,7 @@ int Game::main_loop()
             P_lastmove = SDL_GetTicks();
             P_turn();
             redraw();
-            P_nextmove = tick_count+1;
+            P_nextmove = tick_count+2;
         }
         SDL_Delay(1000.0/30.0); // 30 fps
     }

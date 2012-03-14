@@ -28,6 +28,7 @@ protected:
     int maxmp; // mana/magic points
     int mp;
     int str; // strength
+    int spd; // speed in ticks per movement
     int armor; // armor level
     int lvl; // experience level
     Sprite appearance;
@@ -65,6 +66,8 @@ public:
     int getStrength();
     int setStrength(int value);
     int addStrength(int value);
+    int getSpeed();
+    int setSpeed(int value);
     int getArmor();
     int setArmor(int value);
     int addArmor(int value);
