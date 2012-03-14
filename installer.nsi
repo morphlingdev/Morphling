@@ -1,4 +1,3 @@
-# All the other settings can be tweaked by editing the !defines at the top of this script
 !define APPNAME "Morphling"
 !define COMPANYNAME "MorphlingDev"
 !define DESCRIPTION "Roguelike"
@@ -8,7 +7,6 @@ Name "Morphling Installer"
 !define VERSIONMINOR 0
 !define VERSIONBUILD 69
 # These will be displayed by the "Click here for support information" link in "Add/Remove Programs"
-# It is possible to use "mailto:" links in here to open the email client
 !define HELPURL "https://github.com/morphlingdev/Morphling/wiki" # "Support Information" link
 !define UPDATEURL "https://github.com/morphlingdev/Morphling" # "Product Updates" link
 !define ABOUTURL "https://github.com/morphlingdev" # "Publisher" link
@@ -93,10 +91,8 @@ WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYN
 WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayVersion" "${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONBUILD}"
 WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "VersionMajor" "${VERSIONMAJOR}"
 WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "VersionMinor" "${VERSIONMINOR}"
-# There is no option for modifying or repairing the install
 WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "NoModify" 1
 WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "NoRepair" 1
-# Set the INSTALLSIZE constant (!defined at the top of this script) so Add/Remove Programs can accurately report the size
 WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "EstimatedSize" ${INSTALLSIZE}
 
 sectionEnd
@@ -113,13 +109,10 @@ functionEnd
 
 section "uninstall"
  
-	# Remove Start Menu launcher
 	delete "$SMPROGRAMS\Morphling\Morphling.lnk"
 	delete "$DESKTOP\Morphling.lnk"
-	# Try to remove the Start Menu folder - this will only happen if it is empty
 	rmDir "$SMPROGRAMS\Morphling"
  
-	# Remove files
 	delete $INSTDIR\morphling.exe
 	delete $INSTDIR\icon.ico
 	delete $INSTDIR\zlib1.dll
@@ -139,10 +132,9 @@ section "uninstall"
 	delete $INSTDIR\DejaVuSans.ttf
 	delete $INSTDIR\AUTHORS
  
-	# Always delete uninstaller as the last action
+	# Delete uninstaller as the last action
 	delete $INSTDIR\uninstall.exe
  
-	# Try to remove the install directory - this will only happen if it is empty
 	rmDir $INSTDIR
  
 	# Remove uninstaller information from the registry
