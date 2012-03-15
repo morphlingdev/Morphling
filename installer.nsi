@@ -11,7 +11,7 @@ Name "Morphling Installer"
 !define UPDATEURL "https://github.com/morphlingdev/Morphling" # "Product Updates" link
 !define ABOUTURL "https://github.com/morphlingdev" # "Publisher" link
 # This is the size (in kB) of all the files copied into "Program Files"
-!define INSTALLSIZE 4136
+!define INSTALLSIZE 9512
  
 RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on)
  
@@ -66,7 +66,9 @@ file "license.rtf"
 file "libtiff-3.dll"
 file "libpng12-0.dll"
 file "libfreetype-6.dll"
+file "libgcc_s_sjlj-1.dll"
 file "jpeg.dll"
+file "libstdc++-6.dll"
 file "icon.bmp"
 file "DejaVuSansMono.ttf"
 file "DejaVuSans.ttf"
@@ -132,6 +134,8 @@ section "uninstall"
 	delete $INSTDIR\DejaVuSansMono.ttf
 	delete $INSTDIR\DejaVuSans.ttf
 	delete $INSTDIR\AUTHORS
+	delete $INSTDIR\libstdc++-6.dll
+	delete $INSTDIR\libgcc_s_sjlj-1.dll
  
 	# Always delete uninstaller as the last action
 	delete $INSTDIR\uninstall.exe
