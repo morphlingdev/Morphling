@@ -349,7 +349,14 @@ bool Game::simulate_tick()
 
 void Game::P_turn()
 {
-    if(!M.passable(P.getX()+P_dx, P.getY()+P_dy)) // trying to move onto a mountain?
+    int new_x = P.getX()+P_dx;
+    int new_y = P.getY()+P_dy;
+    
+    // Handle torus reacharound
+    new_x = (new_x+map_w)%map_w;
+    new_y = (new_y+map_h)%map_h;
+    
+    if(!M.passable(new_x, new_y)) // trying to move onto a mountain?
     {
         out << "Blocked.\n";
     }
@@ -361,12 +368,12 @@ void Game::P_turn()
             P_skip = 0;
         }
 
-        if(M.occupied(P.getX()+P_dx, P.getY()+P_dy)){
+        if(M.occupied(new_x, new_y)){
             out << "You bump into the entity.\n";
         }
         else{
             M.tileAt(P.getX(), P.getY())->occupant = NULL;
-            P.move(P_dx, P_dy);
+            P.setPosition(new_x, new_y);
             M.tileAt(P.getX(), P.getY())->occupant = &P;
 
             if(P_dx > 0) P.sprite().setState(Sprite::FACING_EAST);

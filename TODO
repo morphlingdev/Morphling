@@ -20,5 +20,8 @@ draw_text_block: Proper word wrapping, not just crude character wrapping
 Game(): Load player stats from file instead of hardcoding
 Game(): Move P_* variables from Game to the actual Player class
 
+- Wraparound currently trolls monsters. Monsters aren't drawn across the wraparound
+  and they can't move across it.
+
 ===Changes===
 V2 MessageLog added, need to make it fully functional
